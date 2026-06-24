@@ -1,30 +1,22 @@
 # Licensing Overview
 
-Last updated: February 2026
+Last updated: June 2026
 
 ## Summary
-QuantumStudio is source-available under Business Source License 1.1 (BSL-1.1). Binary distributions are covered by a separate binary distribution license.
+QuantumStudio is free and open source under the **MIT License**. The source code
+and the compiled binary distributions (DMG / app bundles) are both covered by
+the same MIT terms. No purchase or license key is required.
 
-## Source Code License (BSL 1.1)
-- **License:** Business Source License 1.1
-- **Scope:** Source code only
-- **File:** `LICENSE`
-- **Notes:** Source code use follows BSL terms and change date parameters in `LICENSE`.
-
-## Binary Distribution License
-- **License:** QuantumStudio Binary Distribution License
-- **Scope:** DMG/app bundles and other compiled binaries
-- **File:** `BINARY-LICENSE.txt`
-- **Key restriction:** No commercial redistribution of official binaries without a separate license.
+## License
+- **License:** MIT License
+- **Scope:** Source code and compiled binaries
+- **Files:** [`LICENSE`](LICENSE), [`BINARY-LICENSE.txt`](BINARY-LICENSE.txt)
 
 ## What You Can Do
-- Clone and modify the source code
-- Build binaries for personal or internal use
-- Use source code as allowed by BSL terms
+- Clone, modify, and redistribute the source code
+- Build, use, and redistribute binaries — including commercially
+- Use the software for any purpose, subject to the MIT License terms
 
-## What You Cannot Do
-- Redistribute official binary distributions without permission
-- Offer official binaries commercially without a commercial agreement
-
-## Need Commercial Rights?
-Contact `solomon@qneura.ai`.
+## What You Must Do
+- Include the copyright notice and MIT License text in copies or substantial
+  portions of the Software

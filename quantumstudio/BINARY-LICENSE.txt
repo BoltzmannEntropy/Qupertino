@@ -1,28 +1,33 @@
-Binary Distribution License
+QuantumStudio Binary Distribution — MIT License
 
-This Binary Distribution License ("License") governs use of the compiled
-binary distribution for QuantumStudio (the "Binary"), including DMG and
-app bundles.
+The compiled binary distribution of QuantumStudio (DMG and app bundles) is
+distributed under the same MIT License as the source code. There is no
+separate or restricted binary license, and no purchase or license key is
+required.
 
-1. License Grant
-You may install and use the Binary for personal or internal evaluation use.
+You may install, use, copy, modify, redistribute, and sell the Binary,
+including for commercial purposes, subject to the MIT License terms below.
 
-2. Restrictions
-You may not sell, rent, sublicense, or redistribute the Binary.
-You may not use the Binary for any commercial offering or commercial purpose.
+----------------------------------------------------------------------------
 
-3. Source Code
-Source code is licensed separately under the Business Source License 1.1.
-See LICENSE for details.
+MIT License
 
-4. No Warranty
-THE BINARY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
+Copyright (c) 2026 Shlomo Kashani
 
-5. Limitation of Liability
-IN NO EVENT SHALL QNEURA.AI BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER
-LIABILITY ARISING FROM THE USE OF THE BINARY.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-6. Contact
-If you need commercial binary distribution rights, contact solomon@qneura.ai.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
