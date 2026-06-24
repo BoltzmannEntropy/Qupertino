@@ -327,6 +327,28 @@ Run a QASM circuit:
 ./bench.sh --qasm-suite --qasm-max-qubits 27 --qasm-timeout-ms 30000
 ```
 
+## Full Example Catalog (250+)
+
+Beyond the circuit gallery above, osxQ ships **250 runnable example functions** — gate-algebra
+identities, state preparation, algorithm demonstrations (Bell, GHZ, QFT, Grover, Toffoli,
+teleportation, QPE), MPS tensor-network parity, OpenQASM execution, and the QuantumStudio
+backend/MCP API. The complete itemized list is published on the
+[Examples & Catalog page](https://boltzmannentropy.github.io/osxQuantumWEB/examples.html).
+
+| Category | Count | Source |
+| --- | ---: | --- |
+| Core simulator & gate algebra | 149 | `src/tests/mlxQCoreTest.py` |
+| Quantum-computing examples (identities, algorithms) | 41 | `src/tests/mlxQQCExamplesTest.py` |
+| Internal consistency & measurement parity | 21 | `src/tests/mlxQInternalConsistencyTest.py`, `mlxQMeasurementParityTest.py` |
+| MPS tensor-network backend | 12 | `src/tests/mlxQMpsBackendTest.py`, `mlxQMpsParamSuiteTest.py` |
+| QML wrapper | 5 | `src/tests/mlxQQmlWrapperTest.py` |
+| QPE energy estimation | 2 | `src/tests/mlxQQpeEnergyEstimationTest.py` |
+| Benchmark catalog & visualization | 3 | `src/tests/mlxQBenchCatalogTest.py`, `mlxQVisualizationPlotsTest.py` |
+| QuantumStudio backend API & MCP server | 17 | `quantumstudio/tests/test_backend_api.py`, `test_mcp_server.py` |
+| **Total** | **250** | |
+
+Run them all with `./test.sh`, or one module with `python3 -m pytest <file> -q`.
+
 ## Sample Benchmark Log (12q Smoke)
 
 ```text
