@@ -426,9 +426,7 @@ Build UI artifacts:
 
 ## Licensing
 
-- Source code: `LICENSE` (BSL-1.1)
-- Binary distribution: `BINARY-LICENSE.txt`
-- Overview: `LICENSE.md`
+osxQ / QuantumStudio is free and open source under the **MIT License** (see [`LICENSE`](LICENSE)). The source code and the compiled macOS binaries are both covered by the same MIT terms — use, modify, and redistribute freely, including for commercial purposes. No purchase or license key is required.
 
 ## Notes
 

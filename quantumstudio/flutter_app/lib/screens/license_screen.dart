@@ -72,7 +72,7 @@ class LicenseScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 32),
 
-                // BSL Notice
+                // MIT Notice
                 Card(
                   color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
                   child: Padding(
@@ -85,9 +85,9 @@ class LicenseScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Business Source License 1.1', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, color: theme.colorScheme.primary)),
+                              Text('MIT License', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, color: theme.colorScheme.primary)),
                               const SizedBox(height: 4),
-                              Text('Source code converts to GPL-2.0+ on 2029-01-01.', style: theme.textTheme.bodyMedium),
+                              Text('Free and open source. Use, modify, and redistribute freely, including commercially.', style: theme.textTheme.bodyMedium),
                             ],
                           ),
                         ),
@@ -97,8 +97,8 @@ class LicenseScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 24),
 
-                // BSL Text
-                Text('Source Code License', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+                // MIT Text
+                Text('Source Code & Binaries', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
                 const SizedBox(height: 12),
                 Card(
                   child: Padding(
@@ -106,24 +106,15 @@ class LicenseScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Licensor: QNeura.ai\nLicensed Work: QuantumStudio Source Code\nChange Date: 2029-01-01\nChange License: GPL-2.0-or-later', style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold)),
+                        Text('Copyright (c) 2026 Shlomo Kashani', style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold)),
                         const SizedBox(height: 12),
-                        Text('You may copy, modify, create derivative works, redistribute, and make non-production use of the Licensed Work.', style: theme.textTheme.bodyMedium),
+                        Text('Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software.', style: theme.textTheme.bodyMedium),
+                        const SizedBox(height: 12),
+                        Text('Both the source code and the compiled binaries (DMG, app bundles) are distributed under the MIT License. No purchase or license key is required.', style: theme.textTheme.bodyMedium),
                         const SizedBox(height: 12),
                         Text('THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.', style: theme.textTheme.bodyMedium?.copyWith(fontStyle: FontStyle.italic)),
                       ],
                     ),
-                  ),
-                ),
-                const SizedBox(height: 24),
-
-                // Binary License
-                Text('Binary Distribution License', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
-                const SizedBox(height: 12),
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Text('Compiled binaries (DMG, app bundles) are distributed under the same open-source terms as the project source code.', style: theme.textTheme.bodyMedium),
                   ),
                 ),
                 const SizedBox(height: 24),

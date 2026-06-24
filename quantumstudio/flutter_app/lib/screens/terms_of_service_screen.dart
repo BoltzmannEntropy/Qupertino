@@ -251,14 +251,14 @@ class TermsOfServiceScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
 
-                // Section 12: Paid Features
+                // Section 12: Open Source & Licensing
                 _buildSection(
                   context,
-                  '12. Paid Features',
-                  Icons.shopping_cart,
+                  '12. Open Source & Licensing',
+                  Icons.lock_open,
                   [
-                    'If paid features are offered, purchases are processed by the storefront or payment provider.',
-                    'Subscription management and cancellations are handled through your account with that provider.',
+                    'QuantumStudio is free and open source, released under the MIT License.',
+                    'There are no paid features, subscriptions, or license keys. You may use, modify, and redistribute the software, including for commercial purposes.',
                   ],
                 ),
                 const SizedBox(height: 32),

@@ -145,11 +145,11 @@ class _AboutScreenState extends State<AboutScreen> {
                 icon: Icons.code,
                 title: 'Model Credits & Licenses',
                 content:
-                    'MLX (Apache-2.0 style ecosystem)\n'
-                    'mlx-quantum (project license)\n'
+                    'QuantumStudio (MIT License)\n'
+                    'MLX (MIT)\n'
                     'Flutter (BSD-3)\n'
                     'FastAPI (MIT)\n\n'
-                    'See repository LICENSE files for exact legal terms.',
+                    'See the repository LICENSE file for exact legal terms.',
               ),
               const SizedBox(height: 16),
               _buildLegalSection(context),
@@ -194,7 +194,7 @@ class _AboutScreenState extends State<AboutScreen> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Source: BSL-1.1 | Binary: QuantumStudio Binary Distribution License',
+                      'Licensed under the MIT License (source and binaries)',
                       style: TextStyle(
                         fontSize: 11,
                         color: Theme.of(
