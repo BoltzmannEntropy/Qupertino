@@ -1,0 +1,1640 @@
+{
+  "ghz": {
+    "summary": {
+      "count": 7,
+      "qubits_min": 1,
+      "qubits_max": 12,
+      "bond_max_over_runs": 0,
+      "bond_mean_avg": 0.0,
+      "truncation_events_total": 0,
+      "truncation_runs": 0,
+      "early_stop_runs": 0,
+      "stop_on_trunc_runs": 0
+    },
+    "rows": [
+      {
+        "qubits": "1",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "2",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "5",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "7",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "10",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "11",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "12",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      }
+    ]
+  },
+  "grover": {
+    "summary": {
+      "count": 7,
+      "qubits_min": 1,
+      "qubits_max": 12,
+      "bond_max_over_runs": 0,
+      "bond_mean_avg": 0.0,
+      "truncation_events_total": 0,
+      "truncation_runs": 0,
+      "early_stop_runs": 0,
+      "stop_on_trunc_runs": 0
+    },
+    "rows": [
+      {
+        "qubits": "1",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "2",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "5",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "7",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "10",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "11",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "12",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      }
+    ]
+  },
+  "hamiltonian_simulation": {
+    "summary": {
+      "count": 7,
+      "qubits_min": 1,
+      "qubits_max": 12,
+      "bond_max_over_runs": 64,
+      "bond_mean_avg": 7.197113999999999,
+      "truncation_events_total": 141,
+      "truncation_runs": 6,
+      "early_stop_runs": 0,
+      "stop_on_trunc_runs": 0
+    },
+    "rows": [
+      {
+        "qubits": "1",
+        "bond_max": "1",
+        "bond_mean": "1.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "2",
+        "bond_max": "2",
+        "bond_mean": "2.000000",
+        "truncations": "1",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "5",
+        "bond_max": "4",
+        "bond_mean": "3.000000",
+        "truncations": "8",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "7",
+        "bond_max": "8",
+        "bond_mean": "4.666667",
+        "truncations": "14",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "10",
+        "bond_max": "32",
+        "bond_mean": "10.222222",
+        "truncations": "32",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "11",
+        "bond_max": "32",
+        "bond_mean": "12.400000",
+        "truncations": "39",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "12",
+        "bond_max": "64",
+        "bond_mean": "17.090909",
+        "truncations": "47",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      }
+    ]
+  },
+  "heisenberg": {
+    "summary": {
+      "count": 7,
+      "qubits_min": 1,
+      "qubits_max": 12,
+      "bond_max_over_runs": 64,
+      "bond_mean_avg": 7.197113999999999,
+      "truncation_events_total": 9,
+      "truncation_runs": 2,
+      "early_stop_runs": 0,
+      "stop_on_trunc_runs": 0
+    },
+    "rows": [
+      {
+        "qubits": "1",
+        "bond_max": "1",
+        "bond_mean": "1.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "2",
+        "bond_max": "2",
+        "bond_mean": "2.000000",
+        "truncations": "6",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "5",
+        "bond_max": "4",
+        "bond_mean": "3.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "7",
+        "bond_max": "8",
+        "bond_mean": "4.666667",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "10",
+        "bond_max": "32",
+        "bond_mean": "10.222222",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "11",
+        "bond_max": "32",
+        "bond_mean": "12.400000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "12",
+        "bond_max": "64",
+        "bond_mean": "17.090909",
+        "truncations": "3",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      }
+    ]
+  },
+  "heisenberg_random_field": {
+    "summary": {
+      "count": 7,
+      "qubits_min": 1,
+      "qubits_max": 12,
+      "bond_max_over_runs": 64,
+      "bond_mean_avg": 7.197113999999999,
+      "truncation_events_total": 10,
+      "truncation_runs": 4,
+      "early_stop_runs": 0,
+      "stop_on_trunc_runs": 0
+    },
+    "rows": [
+      {
+        "qubits": "1",
+        "bond_max": "1",
+        "bond_mean": "1.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "2",
+        "bond_max": "2",
+        "bond_mean": "2.000000",
+        "truncations": "2",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "5",
+        "bond_max": "4",
+        "bond_mean": "3.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "7",
+        "bond_max": "8",
+        "bond_mean": "4.666667",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "10",
+        "bond_max": "32",
+        "bond_mean": "10.222222",
+        "truncations": "1",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "11",
+        "bond_max": "32",
+        "bond_mean": "12.400000",
+        "truncations": "2",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "12",
+        "bond_max": "64",
+        "bond_mean": "17.090909",
+        "truncations": "5",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      }
+    ]
+  },
+  "heisenberg_xxz": {
+    "summary": {
+      "count": 7,
+      "qubits_min": 1,
+      "qubits_max": 12,
+      "bond_max_over_runs": 64,
+      "bond_mean_avg": 7.197113999999999,
+      "truncation_events_total": 9,
+      "truncation_runs": 2,
+      "early_stop_runs": 0,
+      "stop_on_trunc_runs": 0
+    },
+    "rows": [
+      {
+        "qubits": "1",
+        "bond_max": "1",
+        "bond_mean": "1.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "2",
+        "bond_max": "2",
+        "bond_mean": "2.000000",
+        "truncations": "6",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "5",
+        "bond_max": "4",
+        "bond_mean": "3.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "7",
+        "bond_max": "8",
+        "bond_mean": "4.666667",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "10",
+        "bond_max": "32",
+        "bond_mean": "10.222222",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "11",
+        "bond_max": "32",
+        "bond_mean": "12.400000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "12",
+        "bond_max": "64",
+        "bond_mean": "17.090909",
+        "truncations": "3",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      }
+    ]
+  },
+  "ladder_heisenberg": {
+    "summary": {
+      "count": 7,
+      "qubits_min": 1,
+      "qubits_max": 12,
+      "bond_max_over_runs": 64,
+      "bond_mean_avg": 6.480447285714286,
+      "truncation_events_total": 277,
+      "truncation_runs": 6,
+      "early_stop_runs": 0,
+      "stop_on_trunc_runs": 0
+    },
+    "rows": [
+      {
+        "qubits": "1",
+        "bond_max": "1",
+        "bond_mean": "1.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "2",
+        "bond_max": "2",
+        "bond_mean": "2.000000",
+        "truncations": "2",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "5",
+        "bond_max": "4",
+        "bond_mean": "2.250000",
+        "truncations": "12",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "7",
+        "bond_max": "8",
+        "bond_mean": "3.500000",
+        "truncations": "29",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "10",
+        "bond_max": "32",
+        "bond_mean": "10.222222",
+        "truncations": "70",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "11",
+        "bond_max": "32",
+        "bond_mean": "9.300000",
+        "truncations": "70",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "12",
+        "bond_max": "64",
+        "bond_mean": "17.090909",
+        "truncations": "94",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      }
+    ]
+  },
+  "long_range_ising": {
+    "summary": {
+      "count": 7,
+      "qubits_min": 1,
+      "qubits_max": 12,
+      "bond_max_over_runs": 1,
+      "bond_mean_avg": 1.0,
+      "truncation_events_total": 15576,
+      "truncation_runs": 6,
+      "early_stop_runs": 0,
+      "stop_on_trunc_runs": 0
+    },
+    "rows": [
+      {
+        "qubits": "1",
+        "bond_max": "1",
+        "bond_mean": "1.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "2",
+        "bond_max": "1",
+        "bond_mean": "1.000000",
+        "truncations": "12",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "5",
+        "bond_max": "1",
+        "bond_mean": "1.000000",
+        "truncations": "360",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "7",
+        "bond_max": "1",
+        "bond_mean": "1.000000",
+        "truncations": "1092",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "10",
+        "bond_max": "1",
+        "bond_mean": "1.000000",
+        "truncations": "3420",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "11",
+        "bond_max": "1",
+        "bond_mean": "1.000000",
+        "truncations": "4620",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "12",
+        "bond_max": "1",
+        "bond_mean": "1.000000",
+        "truncations": "6072",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      }
+    ]
+  },
+  "phase_estimation": {
+    "summary": {
+      "count": 7,
+      "qubits_min": 1,
+      "qubits_max": 12,
+      "bond_max_over_runs": 0,
+      "bond_mean_avg": 0.0,
+      "truncation_events_total": 0,
+      "truncation_runs": 0,
+      "early_stop_runs": 0,
+      "stop_on_trunc_runs": 0
+    },
+    "rows": [
+      {
+        "qubits": "1",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "2",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "5",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "7",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "10",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "11",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "12",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      }
+    ]
+  },
+  "qaoa": {
+    "summary": {
+      "count": 7,
+      "qubits_min": 1,
+      "qubits_max": 12,
+      "bond_max_over_runs": 0,
+      "bond_mean_avg": 0.0,
+      "truncation_events_total": 0,
+      "truncation_runs": 0,
+      "early_stop_runs": 0,
+      "stop_on_trunc_runs": 0
+    },
+    "rows": [
+      {
+        "qubits": "1",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "2",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "5",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "7",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "10",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "11",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "12",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      }
+    ]
+  },
+  "qcbm": {
+    "summary": {
+      "count": 7,
+      "qubits_min": 1,
+      "qubits_max": 12,
+      "bond_max_over_runs": 0,
+      "bond_mean_avg": 0.0,
+      "truncation_events_total": 0,
+      "truncation_runs": 0,
+      "early_stop_runs": 0,
+      "stop_on_trunc_runs": 0
+    },
+    "rows": [
+      {
+        "qubits": "1",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "2",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "5",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "7",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "10",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "11",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "12",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      }
+    ]
+  },
+  "qft": {
+    "summary": {
+      "count": 7,
+      "qubits_min": 1,
+      "qubits_max": 12,
+      "bond_max_over_runs": 0,
+      "bond_mean_avg": 0.0,
+      "truncation_events_total": 0,
+      "truncation_runs": 0,
+      "early_stop_runs": 0,
+      "stop_on_trunc_runs": 0
+    },
+    "rows": [
+      {
+        "qubits": "1",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "2",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "5",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "7",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "10",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "11",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "12",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      }
+    ]
+  },
+  "random_circuit": {
+    "summary": {
+      "count": 7,
+      "qubits_min": 1,
+      "qubits_max": 12,
+      "bond_max_over_runs": 0,
+      "bond_mean_avg": 0.0,
+      "truncation_events_total": 0,
+      "truncation_runs": 0,
+      "early_stop_runs": 0,
+      "stop_on_trunc_runs": 0
+    },
+    "rows": [
+      {
+        "qubits": "1",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "2",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "5",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "7",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "10",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "11",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "12",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      }
+    ]
+  },
+  "steady_state": {
+    "summary": {
+      "count": 7,
+      "qubits_min": 1,
+      "qubits_max": 12,
+      "bond_max_over_runs": 0,
+      "bond_mean_avg": 0.0,
+      "truncation_events_total": 0,
+      "truncation_runs": 0,
+      "early_stop_runs": 0,
+      "stop_on_trunc_runs": 0
+    },
+    "rows": [
+      {
+        "qubits": "1",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "2",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "5",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "7",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "10",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "11",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "12",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      }
+    ]
+  },
+  "tfim": {
+    "summary": {
+      "count": 7,
+      "qubits_min": 1,
+      "qubits_max": 12,
+      "bond_max_over_runs": 64,
+      "bond_mean_avg": 7.197113999999999,
+      "truncation_events_total": 141,
+      "truncation_runs": 6,
+      "early_stop_runs": 0,
+      "stop_on_trunc_runs": 0
+    },
+    "rows": [
+      {
+        "qubits": "1",
+        "bond_max": "1",
+        "bond_mean": "1.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "2",
+        "bond_max": "2",
+        "bond_mean": "2.000000",
+        "truncations": "1",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "5",
+        "bond_max": "4",
+        "bond_mean": "3.000000",
+        "truncations": "8",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "7",
+        "bond_max": "8",
+        "bond_mean": "4.666667",
+        "truncations": "14",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "10",
+        "bond_max": "32",
+        "bond_mean": "10.222222",
+        "truncations": "32",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "11",
+        "bond_max": "32",
+        "bond_mean": "12.400000",
+        "truncations": "39",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "12",
+        "bond_max": "64",
+        "bond_mean": "17.090909",
+        "truncations": "47",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      }
+    ]
+  },
+  "tfim_random_field": {
+    "summary": {
+      "count": 7,
+      "qubits_min": 1,
+      "qubits_max": 12,
+      "bond_max_over_runs": 64,
+      "bond_mean_avg": 7.197113999999999,
+      "truncation_events_total": 140,
+      "truncation_runs": 6,
+      "early_stop_runs": 0,
+      "stop_on_trunc_runs": 0
+    },
+    "rows": [
+      {
+        "qubits": "1",
+        "bond_max": "1",
+        "bond_mean": "1.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "2",
+        "bond_max": "2",
+        "bond_mean": "2.000000",
+        "truncations": "1",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "5",
+        "bond_max": "4",
+        "bond_mean": "3.000000",
+        "truncations": "8",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "7",
+        "bond_max": "8",
+        "bond_mean": "4.666667",
+        "truncations": "14",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "10",
+        "bond_max": "32",
+        "bond_mean": "10.222222",
+        "truncations": "31",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "11",
+        "bond_max": "32",
+        "bond_mean": "12.400000",
+        "truncations": "38",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "12",
+        "bond_max": "64",
+        "bond_mean": "17.090909",
+        "truncations": "48",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      }
+    ]
+  },
+  "tfim_trotter2": {
+    "summary": {
+      "count": 7,
+      "qubits_min": 1,
+      "qubits_max": 12,
+      "bond_max_over_runs": 64,
+      "bond_mean_avg": 7.197113999999999,
+      "truncation_events_total": 88,
+      "truncation_runs": 5,
+      "early_stop_runs": 0,
+      "stop_on_trunc_runs": 0
+    },
+    "rows": [
+      {
+        "qubits": "1",
+        "bond_max": "1",
+        "bond_mean": "1.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "2",
+        "bond_max": "2",
+        "bond_mean": "2.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "5",
+        "bond_max": "4",
+        "bond_mean": "3.000000",
+        "truncations": "2",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "7",
+        "bond_max": "8",
+        "bond_mean": "4.666667",
+        "truncations": "7",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "10",
+        "bond_max": "32",
+        "bond_mean": "10.222222",
+        "truncations": "21",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "11",
+        "bond_max": "32",
+        "bond_mean": "12.400000",
+        "truncations": "25",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "12",
+        "bond_max": "64",
+        "bond_mean": "17.090909",
+        "truncations": "33",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      }
+    ]
+  },
+  "time_evolution": {
+    "summary": {
+      "count": 7,
+      "qubits_min": 1,
+      "qubits_max": 12,
+      "bond_max_over_runs": 64,
+      "bond_mean_avg": 7.197113999999999,
+      "truncation_events_total": 69,
+      "truncation_runs": 6,
+      "early_stop_runs": 0,
+      "stop_on_trunc_runs": 0
+    },
+    "rows": [
+      {
+        "qubits": "1",
+        "bond_max": "1",
+        "bond_mean": "1.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "2",
+        "bond_max": "2",
+        "bond_mean": "2.000000",
+        "truncations": "1",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "5",
+        "bond_max": "4",
+        "bond_mean": "3.000000",
+        "truncations": "4",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "7",
+        "bond_max": "8",
+        "bond_mean": "4.666667",
+        "truncations": "8",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "10",
+        "bond_max": "32",
+        "bond_mean": "10.222222",
+        "truncations": "15",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "11",
+        "bond_max": "32",
+        "bond_mean": "12.400000",
+        "truncations": "18",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "12",
+        "bond_max": "64",
+        "bond_mean": "17.090909",
+        "truncations": "23",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      }
+    ]
+  },
+  "trotter": {
+    "summary": {
+      "count": 7,
+      "qubits_min": 1,
+      "qubits_max": 12,
+      "bond_max_over_runs": 64,
+      "bond_mean_avg": 7.197113999999999,
+      "truncation_events_total": 141,
+      "truncation_runs": 6,
+      "early_stop_runs": 0,
+      "stop_on_trunc_runs": 0
+    },
+    "rows": [
+      {
+        "qubits": "1",
+        "bond_max": "1",
+        "bond_mean": "1.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "2",
+        "bond_max": "2",
+        "bond_mean": "2.000000",
+        "truncations": "1",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "5",
+        "bond_max": "4",
+        "bond_mean": "3.000000",
+        "truncations": "8",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "7",
+        "bond_max": "8",
+        "bond_mean": "4.666667",
+        "truncations": "14",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "10",
+        "bond_max": "32",
+        "bond_mean": "10.222222",
+        "truncations": "32",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "11",
+        "bond_max": "32",
+        "bond_mean": "12.400000",
+        "truncations": "39",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "12",
+        "bond_max": "64",
+        "bond_mean": "17.090909",
+        "truncations": "47",
+        "truncated": "1",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      }
+    ]
+  },
+  "variational_circuit": {
+    "summary": {
+      "count": 7,
+      "qubits_min": 1,
+      "qubits_max": 12,
+      "bond_max_over_runs": 0,
+      "bond_mean_avg": 0.0,
+      "truncation_events_total": 0,
+      "truncation_runs": 0,
+      "early_stop_runs": 0,
+      "stop_on_trunc_runs": 0
+    },
+    "rows": [
+      {
+        "qubits": "1",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "2",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "5",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "7",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "10",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "11",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "12",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      }
+    ]
+  },
+  "vqe": {
+    "summary": {
+      "count": 7,
+      "qubits_min": 1,
+      "qubits_max": 12,
+      "bond_max_over_runs": 0,
+      "bond_mean_avg": 0.0,
+      "truncation_events_total": 0,
+      "truncation_runs": 0,
+      "early_stop_runs": 0,
+      "stop_on_trunc_runs": 0
+    },
+    "rows": [
+      {
+        "qubits": "1",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "2",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "5",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "7",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "10",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "11",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      },
+      {
+        "qubits": "12",
+        "bond_max": "0",
+        "bond_mean": "0.000000",
+        "truncations": "0",
+        "truncated": "0",
+        "early_stop": "0",
+        "stopped_on_trunc": "0"
+      }
+    ]
+  }
+}

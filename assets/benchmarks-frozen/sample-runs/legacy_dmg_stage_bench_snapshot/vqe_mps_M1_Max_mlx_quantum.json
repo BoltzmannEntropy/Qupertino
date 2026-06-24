@@ -1,0 +1,110 @@
+{
+  "framework": "mlx-quantum",
+  "version": "python",
+  "device": "apple\u2013silicon\u2013mlx",
+  "hardware": "M1 Max",
+  "chip_generation": "M1",
+  "chip_variant": "Max",
+  "circuit_type": "vqe",
+  "backend": "mps",
+  "platform": "apple-silicon",
+  "results": [
+    {
+      "qubits": 1,
+      "execution_time_ms": 6.611707925796509,
+      "memory_mb": 1.52587890625e-05,
+      "cpu_percent": 100.0,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 1.52587890625e-05,
+      "memory_measured_mb": 4.171875
+    },
+    {
+      "qubits": 2,
+      "execution_time_ms": 12.364957988262177,
+      "memory_mb": 3.0517578125e-05,
+      "cpu_percent": 86.8179253839001,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 3.0517578125e-05,
+      "memory_measured_mb": 1.828125
+    },
+    {
+      "qubits": 5,
+      "execution_time_ms": 26.089000046253204,
+      "memory_mb": 0.000244140625,
+      "cpu_percent": 65.48737003990233,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 0.000244140625,
+      "memory_measured_mb": 0.59375
+    },
+    {
+      "qubits": 7,
+      "execution_time_ms": 33.79745799303055,
+      "memory_mb": 0.0009765625,
+      "cpu_percent": 74.4582625272863,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 0.0009765625,
+      "memory_measured_mb": 0.40625
+    },
+    {
+      "qubits": 10,
+      "execution_time_ms": 58.15266704559326,
+      "memory_mb": 0.0078125,
+      "cpu_percent": 75.0919987311384,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 0.0078125,
+      "memory_measured_mb": 0.984375
+    },
+    {
+      "qubits": 11,
+      "execution_time_ms": 189.56562495231628,
+      "memory_mb": 0.015625,
+      "cpu_percent": 100.0,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 0.015625,
+      "memory_measured_mb": 2.40625
+    },
+    {
+      "qubits": 12,
+      "execution_time_ms": 249.94349998235703,
+      "memory_mb": 0.03125,
+      "cpu_percent": 100.0,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 0.03125,
+      "memory_measured_mb": 2.03125
+    },
+    {
+      "qubits": 13,
+      "execution_time_ms": 306.1692079901695,
+      "memory_mb": 0.0625,
+      "cpu_percent": 100.0,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 0.0625,
+      "memory_measured_mb": 3.46875
+    },
+    {
+      "qubits": 14,
+      "execution_time_ms": 441.4860410094261,
+      "memory_mb": 0.125,
+      "cpu_percent": 100.0,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 0.125,
+      "memory_measured_mb": 6.78125
+    },
+    {
+      "qubits": 15,
+      "execution_time_ms": 1483.1449590325356,
+      "memory_mb": 0.25,
+      "cpu_percent": 100.0,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 0.25,
+      "memory_measured_mb": 4.5
+    }
+  ],
+  "mps": {
+    "dmax": 64,
+    "eps": 1e-10,
+    "bond_max_over_runs": 0,
+    "early_stop_bmax": 0,
+    "mode": "mps"
+  }
+}

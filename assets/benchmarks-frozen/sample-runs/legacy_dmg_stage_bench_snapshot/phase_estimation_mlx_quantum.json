@@ -1,0 +1,32 @@
+{
+  "circuit_type": "phase_estimation",
+  "results": [
+    {
+      "qubits": 3,
+      "execution_time_ms": 21.33874998986721,
+      "memory_mb": 6.103515625e-05,
+      "cpu_percent": 92.12348431531665,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 6.103515625e-05,
+      "memory_measured_mb": 2.71875
+    },
+    {
+      "qubits": 4,
+      "execution_time_ms": 2.0774160027503967,
+      "memory_mb": 0.0001220703125,
+      "cpu_percent": 38.50937890826211,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 0.0001220703125,
+      "memory_measured_mb": 0.1875
+    },
+    {
+      "qubits": 5,
+      "execution_time_ms": 2.583540990948677,
+      "memory_mb": 0.000244140625,
+      "cpu_percent": 35.532627630692076,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 0.000244140625,
+      "memory_measured_mb": 0.28125
+    }
+  ]
+}

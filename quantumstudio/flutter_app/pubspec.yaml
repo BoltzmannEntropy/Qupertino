@@ -1,0 +1,27 @@
+name: quantum_studio
+description: "QuantumStudio - macOS benchmark runner for osxQuantum"
+publish_to: 'none'
+version: 1.0.2+3
+
+environment:
+  sdk: ^3.10.7
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  http: ^1.2.0
+  flutter_markdown: ^0.7.2
+  csv: ^6.0.0
+  path: ^1.9.0
+  path_provider: ^2.1.2
+  url_launcher: ^6.2.0
+  shared_preferences: ^2.2.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true

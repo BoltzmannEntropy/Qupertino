@@ -1,0 +1,83 @@
+{
+  "framework": "mlx-quantum",
+  "version": "python",
+  "device": "apple\u2013silicon\u2013mlx",
+  "hardware": "M1 Max",
+  "chip_generation": "M1",
+  "chip_variant": "Max",
+  "circuit_type": "phase_estimation",
+  "backend": "mps",
+  "platform": "apple-silicon",
+  "results": [
+    {
+      "qubits": 1,
+      "execution_time_ms": 0.0,
+      "memory_mb": 1.52587890625e-05,
+      "cpu_percent": 0.0,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 1.52587890625e-05,
+      "memory_measured_mb": 0.0
+    },
+    {
+      "qubits": 2,
+      "execution_time_ms": 18.442000031471252,
+      "memory_mb": 3.0517578125e-05,
+      "cpu_percent": 98.90467394465618,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 3.0517578125e-05,
+      "memory_measured_mb": 4.265625
+    },
+    {
+      "qubits": 5,
+      "execution_time_ms": 15.87891697883606,
+      "memory_mb": 0.000244140625,
+      "cpu_percent": 50.11676810582606,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 0.000244140625,
+      "memory_measured_mb": 0.25
+    },
+    {
+      "qubits": 7,
+      "execution_time_ms": 43.098999977111816,
+      "memory_mb": 0.0009765625,
+      "cpu_percent": 46.335181815367704,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 0.0009765625,
+      "memory_measured_mb": 0.203125
+    },
+    {
+      "qubits": 10,
+      "execution_time_ms": 165.33829200267792,
+      "memory_mb": 0.0078125,
+      "cpu_percent": 46.14780948551478,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 0.0078125,
+      "memory_measured_mb": 0.375
+    },
+    {
+      "qubits": 11,
+      "execution_time_ms": 180.37991696596146,
+      "memory_mb": 0.015625,
+      "cpu_percent": 51.76629503472974,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 0.015625,
+      "memory_measured_mb": 0.078125
+    },
+    {
+      "qubits": 12,
+      "execution_time_ms": 235.70220798254013,
+      "memory_mb": 0.03125,
+      "cpu_percent": 50.98806711598672,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 0.03125,
+      "memory_measured_mb": 0.140625
+    }
+  ],
+  "mps": {
+    "dmax": 64,
+    "eps": 1e-10,
+    "bond_max_over_runs": 0,
+    "early_stop_bmax": 0,
+    "mode": "mps"
+  }
+}

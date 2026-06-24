@@ -1,0 +1,6 @@
+framework module syncfusion_pdfviewer_macos {
+  umbrella header "syncfusion_pdfviewer_macos-umbrella.h"
+
+  export *
+  module * { export * }
+}

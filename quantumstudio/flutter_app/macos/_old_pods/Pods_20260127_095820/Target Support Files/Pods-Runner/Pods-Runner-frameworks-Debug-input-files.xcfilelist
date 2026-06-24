@@ -1,0 +1,7 @@
+${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh
+${BUILT_PRODUCTS_DIR}/audio_session/audio_session.framework
+${BUILT_PRODUCTS_DIR}/device_info_plus/device_info_plus.framework
+${BUILT_PRODUCTS_DIR}/file_picker/file_picker.framework
+${BUILT_PRODUCTS_DIR}/just_audio/just_audio.framework
+${BUILT_PRODUCTS_DIR}/syncfusion_pdfviewer_macos/syncfusion_pdfviewer_macos.framework
+${BUILT_PRODUCTS_DIR}/url_launcher_macos/url_launcher_macos.framework

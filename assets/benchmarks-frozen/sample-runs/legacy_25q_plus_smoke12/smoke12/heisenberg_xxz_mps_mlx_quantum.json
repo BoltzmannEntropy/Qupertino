@@ -1,0 +1,178 @@
+{
+  "circuit_type": "heisenberg_xxz",
+  "results": [
+    {
+      "qubits": 1,
+      "execution_time_ms": 3.206416070461273,
+      "memory_mb": 1.52587890625e-05,
+      "cpu_percent": 100.0,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 1.52587890625e-05,
+      "memory_measured_mb": 2.421875,
+      "mps": {
+        "bond_max": 1,
+        "bond_mean": 1.0,
+        "truncations": 0,
+        "truncated": false,
+        "early_stop": false,
+        "stopped_on_trunc": false,
+        "bond_dims": []
+      }
+    },
+    {
+      "qubits": 2,
+      "execution_time_ms": 71.10320800542831,
+      "memory_mb": 6.103515625e-05,
+      "cpu_percent": 51.584170431803635,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 3.0517578125e-05,
+      "memory_measured_mb": 1.921875,
+      "mps": {
+        "bond_max": 2,
+        "bond_mean": 2.0,
+        "truncations": 6,
+        "truncated": true,
+        "early_stop": false,
+        "stopped_on_trunc": false,
+        "bond_dims": [
+          2
+        ]
+      }
+    },
+    {
+      "qubits": 5,
+      "execution_time_ms": 130.49329203367233,
+      "memory_mb": 0.00054931640625,
+      "cpu_percent": 44.120275535039355,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 0.000244140625,
+      "memory_measured_mb": 0.375,
+      "mps": {
+        "bond_max": 4,
+        "bond_mean": 3.0,
+        "truncations": 0,
+        "truncated": false,
+        "early_stop": false,
+        "stopped_on_trunc": false,
+        "bond_dims": [
+          2,
+          4,
+          4,
+          2
+        ]
+      }
+    },
+    {
+      "qubits": 7,
+      "execution_time_ms": 193.41408306360245,
+      "memory_mb": 0.00225830078125,
+      "cpu_percent": 43.235217764624494,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 0.0009765625,
+      "memory_measured_mb": 0.203125,
+      "mps": {
+        "bond_max": 8,
+        "bond_mean": 4.666666666666667,
+        "truncations": 0,
+        "truncated": false,
+        "early_stop": false,
+        "stopped_on_trunc": false,
+        "bond_dims": [
+          2,
+          4,
+          8,
+          8,
+          4,
+          2
+        ]
+      }
+    },
+    {
+      "qubits": 10,
+      "execution_time_ms": 330.8838749527931,
+      "memory_mb": 0.02081298828125,
+      "cpu_percent": 48.555101097906785,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 0.0078125,
+      "memory_measured_mb": 0.84375,
+      "mps": {
+        "bond_max": 32,
+        "bond_mean": 10.222222222222221,
+        "truncations": 0,
+        "truncated": false,
+        "early_stop": false,
+        "stopped_on_trunc": false,
+        "bond_dims": [
+          2,
+          4,
+          8,
+          16,
+          32,
+          16,
+          8,
+          4,
+          2
+        ]
+      }
+    },
+    {
+      "qubits": 11,
+      "execution_time_ms": 2259.3139169812202,
+      "memory_mb": 0.03643798828125,
+      "cpu_percent": 100.0,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 0.015625,
+      "memory_measured_mb": 1.25,
+      "mps": {
+        "bond_max": 32,
+        "bond_mean": 12.4,
+        "truncations": 0,
+        "truncated": false,
+        "early_stop": false,
+        "stopped_on_trunc": false,
+        "bond_dims": [
+          2,
+          4,
+          8,
+          16,
+          32,
+          32,
+          16,
+          8,
+          4,
+          2
+        ]
+      }
+    },
+    {
+      "qubits": 12,
+      "execution_time_ms": 3958.461124956608,
+      "memory_mb": 0.08331298828125,
+      "cpu_percent": 100.0,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 0.03125,
+      "memory_measured_mb": 1.6875,
+      "mps": {
+        "bond_max": 64,
+        "bond_mean": 17.09090909090909,
+        "truncations": 3,
+        "truncated": true,
+        "early_stop": false,
+        "stopped_on_trunc": false,
+        "bond_dims": [
+          2,
+          4,
+          8,
+          16,
+          32,
+          64,
+          32,
+          16,
+          8,
+          4,
+          2
+        ]
+      }
+    }
+  ]
+}

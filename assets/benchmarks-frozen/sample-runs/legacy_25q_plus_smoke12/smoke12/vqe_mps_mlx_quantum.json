@@ -1,0 +1,68 @@
+{
+  "circuit_type": "vqe",
+  "results": [
+    {
+      "qubits": 1,
+      "execution_time_ms": 4.592083036899567,
+      "memory_mb": 1.52587890625e-05,
+      "cpu_percent": 100.0,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 1.52587890625e-05,
+      "memory_measured_mb": 3.40625
+    },
+    {
+      "qubits": 2,
+      "execution_time_ms": 19.08566701412201,
+      "memory_mb": 3.0517578125e-05,
+      "cpu_percent": 89.46504194674301,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 3.0517578125e-05,
+      "memory_measured_mb": 2.0625
+    },
+    {
+      "qubits": 5,
+      "execution_time_ms": 24.29550004005432,
+      "memory_mb": 0.000244140625,
+      "cpu_percent": 41.6949640192601,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 0.000244140625,
+      "memory_measured_mb": 0.46875
+    },
+    {
+      "qubits": 7,
+      "execution_time_ms": 62.2161660194397,
+      "memory_mb": 0.0009765625,
+      "cpu_percent": 36.75732765798284,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 0.0009765625,
+      "memory_measured_mb": 0.34375
+    },
+    {
+      "qubits": 10,
+      "execution_time_ms": 63.833957970142365,
+      "memory_mb": 0.0078125,
+      "cpu_percent": 44.27267382232298,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 0.0078125,
+      "memory_measured_mb": 0.90625
+    },
+    {
+      "qubits": 11,
+      "execution_time_ms": 436.65670800209045,
+      "memory_mb": 0.015625,
+      "cpu_percent": 100.0,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 0.015625,
+      "memory_measured_mb": 0.96875
+    },
+    {
+      "qubits": 12,
+      "execution_time_ms": 462.72125005722046,
+      "memory_mb": 0.03125,
+      "cpu_percent": 100.0,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 0.03125,
+      "memory_measured_mb": 1.140625
+    }
+  ]
+}

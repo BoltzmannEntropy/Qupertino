@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mlxq"
+version = "0.0.1"
+description = "Minimal MLX-based quantum simulator (pure Python)"
+requires-python = ">=3.9"
+dependencies = [
+  "mlx>=0.6.0",
+  "rich>=13.0.0",
+  "numpy>=1.24.0",
+]
+
+[project.optional-dependencies]
+plot = [
+  "matplotlib>=3.7.0",
+]
+tui = [
+  "textual>=0.80.0",
+]
+backend = [
+  "fastapi==0.115.6",
+  "uvicorn==0.30.6",
+  "pydantic==2.8.2",
+  "psutil>=5.9.0",
+  "httpx>=0.27.0",
+]
+tests = [
+  "pennylane",
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["mlxq*"]

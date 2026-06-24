@@ -1,0 +1,554 @@
+{
+  "suite": [
+    {
+      "file": "advanced_circuit.qasm",
+      "qubits": 3,
+      "gates": 7,
+      "depth": 5,
+      "by_gate": {
+        "H": 1,
+        "U3": 1,
+        "CNOT": 1,
+        "CCX": 1,
+        "SWAP": 1,
+        "S": 1,
+        "T": 1
+      },
+      "status": "ok",
+      "wall_ms": 8.221791997551918,
+      "cpu_s": 0.00875599999999821,
+      "peak_delta_mb": 0.0
+    },
+    {
+      "file": "bell.qasm",
+      "qubits": 2,
+      "gates": 2,
+      "depth": 2,
+      "by_gate": {
+        "H": 1,
+        "CNOT": 1
+      },
+      "status": "ok",
+      "wall_ms": 0.6234590001404285,
+      "cpu_s": 0.00042400000000242244,
+      "peak_delta_mb": 0.0
+    },
+    {
+      "file": "bell_n4.qasm",
+      "qubits": 4,
+      "gates": 4,
+      "depth": 2,
+      "by_gate": {
+        "H": 2,
+        "CNOT": 2
+      },
+      "status": "ok",
+      "wall_ms": 1.3524169996380806,
+      "cpu_s": 0.0007880000000000109,
+      "peak_delta_mb": 0.0
+    },
+    {
+      "file": "bell_state.qasm",
+      "qubits": 2,
+      "gates": 2,
+      "depth": 2,
+      "by_gate": {
+        "H": 1,
+        "CNOT": 1
+      },
+      "status": "ok",
+      "wall_ms": 0.5656250044703484,
+      "cpu_s": 0.00034800000000245745,
+      "peak_delta_mb": 0.0
+    },
+    {
+      "file": "bigadder_n18.qasm",
+      "qubits": 18,
+      "gates": 60,
+      "depth": 11,
+      "by_gate": {
+        "X": 10,
+        "CNOT": 34,
+        "CCX": 16
+      },
+      "status": "ok",
+      "wall_ms": 45.788499999791384,
+      "cpu_s": 0.04541600000000301,
+      "peak_delta_mb": 0.0
+    },
+    {
+      "file": "bv_n14.qasm",
+      "qubits": 14,
+      "gates": 41,
+      "depth": 15,
+      "by_gate": {
+        "H": 27,
+        "X": 1,
+        "CNOT": 13
+      },
+      "status": "ok",
+      "wall_ms": 6.816332999616861,
+      "cpu_s": 0.009495000000001141,
+      "peak_delta_mb": 0.0
+    },
+    {
+      "file": "bwt_n21.qasm",
+      "qubits": 21,
+      "gates": 103601,
+      "status": "skipped_qubits"
+    },
+    {
+      "file": "cat_state_n22.qasm",
+      "qubits": 22,
+      "gates": 22,
+      "status": "skipped_qubits"
+    },
+    {
+      "file": "coin_flip.qasm",
+      "qubits": 1,
+      "gates": 1,
+      "depth": 1,
+      "by_gate": {
+        "H": 1
+      },
+      "status": "ok",
+      "wall_ms": 3.0335829965770245,
+      "cpu_s": 0.0021439999999586234,
+      "peak_delta_mb": 0.0
+    },
+    {
+      "file": "deutsch_n2.qasm",
+      "qubits": 2,
+      "gates": 5,
+      "depth": 3,
+      "by_gate": {
+        "X": 1,
+        "H": 3,
+        "CNOT": 1
+      },
+      "status": "ok",
+      "wall_ms": 5.427374999970198,
+      "cpu_s": 0.005227999999988242,
+      "peak_delta_mb": 0.0
+    },
+    {
+      "file": "dnn_n16.qasm",
+      "qubits": 16,
+      "gates": 2016,
+      "depth": 150,
+      "by_gate": {
+        "RX": 512,
+        "RY": 288,
+        "RZ": 320,
+        "U3": 512,
+        "CNOT": 384
+      },
+      "status": "ok",
+      "wall_ms": 341.7695830017328,
+      "cpu_s": 0.40407100000001606,
+      "peak_delta_mb": 0.0
+    },
+    {
+      "file": "ghz_state_n23.qasm",
+      "qubits": 23,
+      "gates": 23,
+      "status": "skipped_qubits"
+    },
+    {
+      "file": "grover_2qubit.qasm",
+      "qubits": 2,
+      "gates": 12,
+      "depth": 7,
+      "by_gate": {
+        "H": 6,
+        "CZ": 2,
+        "X": 4
+      },
+      "status": "ok",
+      "wall_ms": 1.5891249999403954,
+      "cpu_s": 0.0014069999999719585,
+      "peak_delta_mb": 0.0
+    },
+    {
+      "file": "grover_n2.qasm",
+      "qubits": 2,
+      "gates": 12,
+      "depth": 7,
+      "by_gate": {
+        "H": 6,
+        "CZ": 2,
+        "X": 4
+      },
+      "status": "ok",
+      "wall_ms": 1.6023749969899654,
+      "cpu_s": 0.0017550000000028376,
+      "peak_delta_mb": 0.0
+    },
+    {
+      "file": "hs4_n4.qasm",
+      "qubits": 4,
+      "gates": 28,
+      "depth": 9,
+      "by_gate": {
+        "H": 20,
+        "X": 4,
+        "CNOT": 4
+      },
+      "status": "ok",
+      "wall_ms": 3.755832999944687,
+      "cpu_s": 0.0053000000000054115,
+      "peak_delta_mb": 0.0
+    },
+    {
+      "file": "inverseqft_n4.qasm",
+      "qubits": 4,
+      "gates": 8,
+      "depth": 2,
+      "by_gate": {
+        "H": 8
+      },
+      "status": "ok",
+      "wall_ms": 0.9107920005917549,
+      "cpu_s": 0.000914000000022952,
+      "peak_delta_mb": 0.0
+    },
+    {
+      "file": "ipea_n2.qasm",
+      "qubits": 2,
+      "gates": 38,
+      "depth": 38,
+      "by_gate": {
+        "H": 8,
+        "CNOT": 30
+      },
+      "status": "ok",
+      "wall_ms": 3.7479580007493496,
+      "cpu_s": 0.005101999999993723,
+      "peak_delta_mb": 0.0
+    },
+    {
+      "file": "ising_n10.qasm",
+      "qubits": 10,
+      "gates": 480,
+      "depth": 61,
+      "by_gate": {
+        "H": 110,
+        "RZ": 280,
+        "CNOT": 90
+      },
+      "status": "ok",
+      "wall_ms": 50.14249999821186,
+      "cpu_s": 0.07331299999998464,
+      "peak_delta_mb": 0.0
+    },
+    {
+      "file": "ising_n26.qasm",
+      "qubits": 26,
+      "gates": 280,
+      "status": "skipped_qubits"
+    },
+    {
+      "file": "knn_n25.qasm",
+      "qubits": 25,
+      "gates": 38,
+      "status": "skipped_qubits"
+    },
+    {
+      "file": "multiplier_n15.qasm",
+      "qubits": 15,
+      "gates": 70,
+      "depth": 24,
+      "by_gate": {
+        "X": 4,
+        "CCX": 36,
+        "CNOT": 30
+      },
+      "status": "ok",
+      "wall_ms": 9.36141699925065,
+      "cpu_s": 0.013295999999968444,
+      "peak_delta_mb": 0.0
+    },
+    {
+      "file": "multiply_n13.qasm",
+      "qubits": 13,
+      "gates": 14,
+      "depth": 5,
+      "by_gate": {
+        "X": 4,
+        "CCX": 6,
+        "CNOT": 4
+      },
+      "status": "ok",
+      "wall_ms": 2.52454200014472,
+      "cpu_s": 0.0030270000000314212,
+      "peak_delta_mb": 0.0
+    },
+    {
+      "file": "qec9xz_n17.qasm",
+      "qubits": 17,
+      "gates": 53,
+      "depth": 10,
+      "by_gate": {
+        "H": 21,
+        "CNOT": 32
+      },
+      "status": "ok",
+      "wall_ms": 14.608042001724243,
+      "cpu_s": 0.019976000000013983,
+      "peak_delta_mb": 0.0
+    },
+    {
+      "file": "qf21_n15.qasm",
+      "qubits": 15,
+      "gates": 73,
+      "depth": 13,
+      "by_gate": {
+        "H": 20,
+        "X": 3,
+        "CCX": 4,
+        "CZ": 1,
+        "CPHASE": 45
+      },
+      "status": "ok",
+      "wall_ms": 9.909999996423721,
+      "cpu_s": 0.01215100000001712,
+      "peak_delta_mb": 0.0
+    },
+    {
+      "file": "qft_n18.qasm",
+      "qubits": 18,
+      "gates": 783,
+      "depth": 76,
+      "by_gate": {
+        "H": 18,
+        "U1": 459,
+        "CNOT": 306
+      },
+      "status": "ok",
+      "wall_ms": 286.1244579963386,
+      "cpu_s": 0.13347800000002508,
+      "peak_delta_mb": 0.0
+    },
+    {
+      "file": "qft_n4.qasm",
+      "qubits": 4,
+      "gates": 12,
+      "depth": 6,
+      "by_gate": {
+        "X": 2,
+        "H": 4,
+        "CPHASE": 6
+      },
+      "status": "ok",
+      "wall_ms": 2.1995000019669533,
+      "cpu_s": 0.0027499999999918145,
+      "peak_delta_mb": 0.0
+    },
+    {
+      "file": "qpe_n9.qasm",
+      "qubits": 9,
+      "gates": 33,
+      "depth": 9,
+      "by_gate": {
+        "H": 12,
+        "X": 3,
+        "CCX": 2,
+        "CZ": 1,
+        "CPHASE": 15
+      },
+      "status": "ok",
+      "wall_ms": 5.26808400079608,
+      "cpu_s": 0.007359000000008109,
+      "peak_delta_mb": 0.0
+    },
+    {
+      "file": "qram_n20.qasm",
+      "qubits": 20,
+      "gates": 41,
+      "status": "skipped_qubits"
+    },
+    {
+      "file": "qrng_n4.qasm",
+      "qubits": 4,
+      "gates": 4,
+      "depth": 1,
+      "by_gate": {
+        "H": 4
+      },
+      "status": "ok",
+      "wall_ms": 1.0455419979989529,
+      "cpu_s": 0.0006890000000225882,
+      "peak_delta_mb": 0.0
+    },
+    {
+      "file": "sat_n11.qasm",
+      "qubits": 11,
+      "gates": 91,
+      "depth": 33,
+      "by_gate": {
+        "H": 15,
+        "X": 34,
+        "CCX": 42
+      },
+      "status": "ok",
+      "wall_ms": 11.886833999305964,
+      "cpu_s": 0.016524999999973033,
+      "peak_delta_mb": 0.0
+    },
+    {
+      "file": "seca_n11.qasm",
+      "qubits": 11,
+      "gates": 70,
+      "depth": 24,
+      "by_gate": {
+        "Z": 8,
+        "H": 18,
+        "CNOT": 19,
+        "CZ": 17,
+        "CCX": 8
+      },
+      "status": "ok",
+      "wall_ms": 8.630249995738268,
+      "cpu_s": 0.01226200000002109,
+      "peak_delta_mb": 0.0
+    },
+    {
+      "file": "swap_test_n25.qasm",
+      "qubits": 25,
+      "gates": 38,
+      "status": "skipped_qubits"
+    },
+    {
+      "file": "teleport_minimal.qasm",
+      "qubits": 3,
+      "gates": 8,
+      "depth": 5,
+      "by_gate": {
+        "U3": 2,
+        "H": 2,
+        "CNOT": 3,
+        "CZ": 1
+      },
+      "status": "ok",
+      "wall_ms": 1.4737910032272339,
+      "cpu_s": 0.0015899999999646752,
+      "peak_delta_mb": 0.0
+    },
+    {
+      "file": "teleportation_n3.qasm",
+      "qubits": 3,
+      "gates": 8,
+      "depth": 6,
+      "by_gate": {
+        "H": 4,
+        "T": 1,
+        "S": 1,
+        "CNOT": 2
+      },
+      "status": "ok",
+      "wall_ms": 0.9770830012857914,
+      "cpu_s": 0.0010340000000041982,
+      "peak_delta_mb": 0.0
+    },
+    {
+      "file": "toffoli_n3.qasm",
+      "qubits": 3,
+      "gates": 13,
+      "depth": 10,
+      "by_gate": {
+        "X": 2,
+        "H": 2,
+        "CNOT": 4,
+        "TDG": 2,
+        "T": 3
+      },
+      "status": "ok",
+      "wall_ms": 1.6024589948356152,
+      "cpu_s": 0.0019670000000076016,
+      "peak_delta_mb": 0.0
+    },
+    {
+      "file": "variational_n4.qasm",
+      "qubits": 4,
+      "gates": 54,
+      "depth": 28,
+      "by_gate": {
+        "X": 2,
+        "RZ": 28,
+        "CNOT": 16,
+        "H": 8
+      },
+      "status": "ok",
+      "wall_ms": 6.435042001307011,
+      "cpu_s": 0.008958000000006905,
+      "peak_delta_mb": 0.0
+    },
+    {
+      "file": "vqe_ising.qasm",
+      "qubits": 2,
+      "gates": 5,
+      "depth": 3,
+      "by_gate": {
+        "RY": 4,
+        "CNOT": 1
+      },
+      "status": "ok",
+      "wall_ms": 0.7691249996423721,
+      "cpu_s": 0.000660000000010541,
+      "peak_delta_mb": 0.0
+    },
+    {
+      "file": "vqe_n4.qasm",
+      "qubits": 4,
+      "gates": 27,
+      "depth": 8,
+      "by_gate": {
+        "SX": 16,
+        "RZ": 8,
+        "CNOT": 3
+      },
+      "status": "ok",
+      "wall_ms": 3.2266249991953373,
+      "cpu_s": 0.004549999999994725,
+      "peak_delta_mb": 0.0
+    },
+    {
+      "file": "wstate_n27.qasm",
+      "qubits": 27,
+      "gates": 105,
+      "status": "skipped_qubits"
+    },
+    {
+      "file": "wstate_n3.qasm",
+      "qubits": 3,
+      "gates": 6,
+      "depth": 5,
+      "by_gate": {
+        "U3": 1,
+        "CH": 1,
+        "CCX": 1,
+        "X": 2,
+        "CNOT": 1
+      },
+      "status": "ok",
+      "wall_ms": 1.2855830006301403,
+      "cpu_s": 0.0010760000000118453,
+      "peak_delta_mb": 0.0
+    },
+    {
+      "file": "factor247_n15.qasm",
+      "status": "skipped_large_group"
+    },
+    {
+      "file": "vqe_n24.qasm",
+      "status": "skipped_large_group"
+    }
+  ],
+  "summary": {
+    "passed": 32,
+    "total": 32,
+    "wall_ms": 184106.04329200462,
+    "cpu_s": 183.729152,
+    "peak_rss_mb": 1639.46875
+  }
+}

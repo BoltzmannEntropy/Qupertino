@@ -1,0 +1,10 @@
+hamiltonian_simulation
+time_evolution
+trotter
+random_circuit
+qcbm
+qft
+qaoa
+variational_circuit
+grover
+ghz

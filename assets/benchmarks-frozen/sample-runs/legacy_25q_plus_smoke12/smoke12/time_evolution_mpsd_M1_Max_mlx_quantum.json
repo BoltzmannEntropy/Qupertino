@@ -1,0 +1,186 @@
+{
+  "framework": "mlx-quantum",
+  "version": "python",
+  "device": "apple\u2013silicon\u2013mlx",
+  "hardware": "M1 Max",
+  "chip_generation": "M1",
+  "chip_variant": "Max",
+  "circuit_type": "time_evolution",
+  "backend": "mps",
+  "platform": "apple-silicon",
+  "results": [
+    {
+      "qubits": 1,
+      "execution_time_ms": 4.6988330483436584,
+      "memory_mb": 1.52587890625e-05,
+      "cpu_percent": 85.12751908497333,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 1.52587890625e-05,
+      "memory_measured_mb": 2.796875,
+      "mps": {
+        "bond_max": 1,
+        "bond_mean": 1.0,
+        "truncations": 0,
+        "truncated": false,
+        "bond_dims": [],
+        "stopped_on_trunc": false
+      }
+    },
+    {
+      "qubits": 2,
+      "execution_time_ms": 24.71275007724762,
+      "memory_mb": 6.103515625e-05,
+      "cpu_percent": 83.20806035639038,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 3.0517578125e-05,
+      "memory_measured_mb": 1.75,
+      "mps": {
+        "bond_max": 2,
+        "bond_mean": 2.0,
+        "truncations": 1,
+        "truncated": true,
+        "bond_dims": [
+          2
+        ],
+        "stopped_on_trunc": false
+      }
+    },
+    {
+      "qubits": 5,
+      "execution_time_ms": 27.98295897245407,
+      "memory_mb": 0.00054931640625,
+      "cpu_percent": 43.32636878013749,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 0.000244140625,
+      "memory_measured_mb": 0.328125,
+      "mps": {
+        "bond_max": 4,
+        "bond_mean": 3.0,
+        "truncations": 4,
+        "truncated": true,
+        "bond_dims": [
+          2,
+          4,
+          4,
+          2
+        ],
+        "stopped_on_trunc": false
+      }
+    },
+    {
+      "qubits": 7,
+      "execution_time_ms": 41.37095904350281,
+      "memory_mb": 0.00225830078125,
+      "cpu_percent": 42.25427789000077,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 0.0009765625,
+      "memory_measured_mb": 0.140625,
+      "mps": {
+        "bond_max": 8,
+        "bond_mean": 4.666666666666667,
+        "truncations": 8,
+        "truncated": true,
+        "bond_dims": [
+          2,
+          4,
+          8,
+          8,
+          4,
+          2
+        ],
+        "stopped_on_trunc": false
+      }
+    },
+    {
+      "qubits": 10,
+      "execution_time_ms": 70.27066600322723,
+      "memory_mb": 0.02081298828125,
+      "cpu_percent": 46.087509685069264,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 0.0078125,
+      "memory_measured_mb": 0.96875,
+      "mps": {
+        "bond_max": 32,
+        "bond_mean": 10.222222222222221,
+        "truncations": 16,
+        "truncated": true,
+        "bond_dims": [
+          2,
+          4,
+          8,
+          16,
+          32,
+          16,
+          8,
+          4,
+          2
+        ],
+        "stopped_on_trunc": false
+      }
+    },
+    {
+      "qubits": 11,
+      "execution_time_ms": 303.5877079963684,
+      "memory_mb": 0.03643798828125,
+      "cpu_percent": 100.0,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 0.015625,
+      "memory_measured_mb": 1.046875,
+      "mps": {
+        "bond_max": 32,
+        "bond_mean": 12.4,
+        "truncations": 20,
+        "truncated": true,
+        "bond_dims": [
+          2,
+          4,
+          8,
+          16,
+          32,
+          32,
+          16,
+          8,
+          4,
+          2
+        ],
+        "stopped_on_trunc": false
+      }
+    },
+    {
+      "qubits": 12,
+      "execution_time_ms": 303.0688749551773,
+      "memory_mb": 0.08331298828125,
+      "cpu_percent": 100.0,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 0.03125,
+      "memory_measured_mb": 1.5,
+      "mps": {
+        "bond_max": 64,
+        "bond_mean": 17.09090909090909,
+        "truncations": 25,
+        "truncated": true,
+        "bond_dims": [
+          2,
+          4,
+          8,
+          16,
+          32,
+          64,
+          32,
+          16,
+          8,
+          4,
+          2
+        ],
+        "stopped_on_trunc": false
+      }
+    }
+  ],
+  "mps": {
+    "dmax": 64,
+    "eps": 1e-10,
+    "bond_max_over_runs": 64,
+    "early_stop_bmax": 0,
+    "mode": "mpsd"
+  }
+}

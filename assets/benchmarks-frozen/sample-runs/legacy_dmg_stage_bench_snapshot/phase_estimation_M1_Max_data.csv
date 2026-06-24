@@ -1,0 +1,4 @@
+qubits,execution_time_ms,memory_mb,cpu_percent,gpu_percent,estimated
+3,21.338750,0.000061,92.12,0.00,0
+4,2.077416,0.000122,38.51,0.00,0
+5,2.583541,0.000244,35.53,0.00,0

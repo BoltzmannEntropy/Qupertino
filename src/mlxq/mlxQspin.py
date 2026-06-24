@@ -1,0 +1,5 @@
+"""mlxQ-prefixed alias for spin module."""
+from .spin import *  # noqa: F401,F403
+
+__all__ = [name for name in globals().keys() if not name.startswith('_')]
+

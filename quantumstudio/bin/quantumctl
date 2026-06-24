@@ -1,0 +1,351 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# QuantumStudio Control Script
+# Benchmark UI for osxQuantum (macOS)
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(dirname "$SCRIPT_DIR")"
+BACKEND_DIR="$ROOT_DIR/backend"
+FLUTTER_DIR="$ROOT_DIR/flutter_app"
+PROJECT_ROOT="$(cd "$ROOT_DIR/.." && pwd)"
+PID_DIR="$ROOT_DIR/.pids"
+LOG_DIR="$ROOT_DIR/.logs"
+RUNS_LOG_DIR="$ROOT_DIR/runs"
+VERSION_FILE="$FLUTTER_DIR/lib/version.dart"
+RUNTIME_PYTHON_DEFAULT="$PROJECT_ROOT/.runtime-venv/bin/python"
+
+# Ports
+BACKEND_PORT=8127
+
+# Flutter app name
+FLUTTER_APP_BUNDLE_NAME="QuantumStudio"
+FLUTTER_APP_BUNDLE_PATH_DEBUG="$FLUTTER_DIR/build/macos/Build/Products/Debug/${FLUTTER_APP_BUNDLE_NAME}.app"
+FLUTTER_APP_BUNDLE_PATH_RELEASE="$FLUTTER_DIR/build/macos/Build/Products/Release/${FLUTTER_APP_BUNDLE_NAME}.app"
+
+read_app_version() {
+    if [ -f "$VERSION_FILE" ]; then
+        sed -n 's/^const String appVersion = "\(.*\)";/\1/p' "$VERSION_FILE" | head -n 1
+    fi
+}
+
+APP_VERSION="${APP_VERSION:-$(read_app_version)}"
+[ -z "$APP_VERSION" ] && APP_VERSION="1.0.0"
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m'
+
+mkdir -p "$PID_DIR" "$LOG_DIR" "$RUNS_LOG_DIR"
+
+print_status() {
+    local name="$1"
+    local port="$2"
+
+    if lsof -ti:"$port" &>/dev/null; then
+        local pid=$(lsof -ti:"$port" | head -1)
+        echo -e "${GREEN}●${NC} $name: ${GREEN}RUNNING${NC} [PID: $pid, Port: $port]"
+    else
+        echo -e "${RED}○${NC} $name: ${RED}STOPPED${NC}"
+    fi
+}
+
+kill_port() {
+    local port="$1"
+    local pids=$(lsof -ti:"$port" 2>/dev/null || true)
+    if [ -n "$pids" ]; then
+        echo "$pids" | xargs kill -9 2>/dev/null || true
+        sleep 1
+    fi
+}
+
+wait_for_health() {
+    local url="$1"
+    local max_retries="${2:-30}"
+    local retry=0
+
+    echo -n "Waiting for $url "
+    while [ $retry -lt $max_retries ]; do
+        if curl -s "$url" &>/dev/null; then
+            echo -e " ${GREEN}OK${NC}"
+            return 0
+        fi
+        echo -n "."
+        sleep 1
+        ((retry++))
+    done
+    echo -e " ${RED}FAILED${NC}"
+    return 1
+}
+
+start_backend() {
+    echo -e "${BLUE}Starting backend...${NC}"
+
+    kill_port $BACKEND_PORT
+
+    local python_bin="${QUANTUMSTUDIO_PYTHON:-$RUNTIME_PYTHON_DEFAULT}"
+    if [ ! -x "$python_bin" ]; then
+        echo "Runtime python not found at $python_bin"
+        echo "Run: $PROJECT_ROOT/scripts/setup_runtime_venv.sh"
+        return 1
+    fi
+    "$python_bin" - <<'PY'
+import sys
+try:
+    import mlx.core as mx
+    mx.array([1.0])
+except Exception as e:
+    print(f"[preflight] MLX initialization failed: {e}", file=sys.stderr)
+    raise
+print("[preflight] MLX initialization OK")
+PY
+
+    cd "$BACKEND_DIR"
+    nohup "$python_bin" -m uvicorn main:app --port $BACKEND_PORT > "$LOG_DIR/backend.log" 2>&1 &
+    echo $! > "$PID_DIR/backend.pid"
+
+    wait_for_health "http://localhost:$BACKEND_PORT/api/health"
+}
+
+stop_backend() {
+    echo -e "${BLUE}Stopping backend...${NC}"
+    kill_port $BACKEND_PORT
+    rm -f "$PID_DIR/backend.pid"
+    echo -e "${GREEN}Backend stopped${NC}"
+}
+
+start_flutter() {
+    local mode="${1:-release}"
+    echo -e "${BLUE}Starting Flutter UI ($mode mode)...${NC}"
+
+    cd "$FLUTTER_DIR"
+
+    if [ "$mode" = "dev" ]; then
+        echo "Building Flutter app (debug)..."
+        flutter pub get
+        flutter build macos --debug
+        if [ -d "$FLUTTER_APP_BUNDLE_PATH_DEBUG" ]; then
+            open "$FLUTTER_APP_BUNDLE_PATH_DEBUG"
+        else
+            echo -e "${YELLOW}Debug app not found, falling back to flutter run${NC}"
+            flutter run -d macos > "$LOG_DIR/flutter.log" 2>&1 &
+            echo $! > "$PID_DIR/flutter.pid"
+        fi
+    else
+        echo "Building Flutter app..."
+        flutter pub get
+        flutter build macos --release
+
+        if [ -d "$FLUTTER_APP_BUNDLE_PATH_RELEASE" ]; then
+            open "$FLUTTER_APP_BUNDLE_PATH_RELEASE"
+        else
+            echo -e "${YELLOW}App not found at $FLUTTER_APP_BUNDLE_PATH_RELEASE, running in dev mode${NC}"
+            flutter run -d macos > "$LOG_DIR/flutter.log" 2>&1 &
+            echo $! > "$PID_DIR/flutter.pid"
+        fi
+    fi
+}
+
+stop_flutter() {
+    echo -e "${BLUE}Stopping Flutter UI...${NC}"
+
+    if [ -f "$PID_DIR/flutter.pid" ]; then
+        kill $(cat "$PID_DIR/flutter.pid") 2>/dev/null || true
+        rm -f "$PID_DIR/flutter.pid"
+    fi
+
+    osascript -e "quit app \"${FLUTTER_APP_BUNDLE_NAME}\"" 2>/dev/null || true
+
+    echo -e "${GREEN}Flutter stopped${NC}"
+}
+
+build_flutter() {
+    echo -e "${BLUE}Building Flutter app...${NC}"
+    cd "$FLUTTER_DIR"
+    flutter pub get
+    flutter build macos --release
+    echo -e "${GREEN}Build complete${NC}"
+}
+
+cmd_up() {
+    local skip_flutter=false
+    local flutter_mode="dev"
+
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            --no-flutter) skip_flutter=true ;;
+            --flutter-release) flutter_mode="release" ;;
+            *) echo "Unknown option: $1" ;;
+        esac
+        shift
+    done
+
+    echo -e "${BLUE}=== Starting QuantumStudio ===${NC}"
+    start_backend
+
+    if [ "$skip_flutter" = false ]; then
+        start_flutter "$flutter_mode"
+    fi
+
+    echo ""
+    echo -e "${GREEN}=== QuantumStudio Ready ===${NC}"
+    echo -e "Backend:    http://localhost:$BACKEND_PORT"
+    echo -e "API Docs:   http://localhost:$BACKEND_PORT/docs"
+}
+
+cmd_down() {
+    echo -e "${BLUE}=== Stopping QuantumStudio ===${NC}"
+    stop_flutter
+    stop_backend
+    echo -e "${GREEN}=== QuantumStudio Stopped ===${NC}"
+}
+
+cmd_status() {
+    echo -e "${BLUE}=== QuantumStudio Status ===${NC}"
+    echo ""
+    echo -e "${GREEN}Services:${NC}"
+    print_status "Backend" $BACKEND_PORT
+
+    local flutter_running=false
+    if [ -f "$PID_DIR/flutter.pid" ]; then
+        local pid=$(cat "$PID_DIR/flutter.pid")
+        if kill -0 "$pid" 2>/dev/null; then
+            flutter_running=true
+            echo -e "${GREEN}●${NC} Flutter UI: ${GREEN}RUNNING${NC} [PID: $pid]"
+        fi
+    fi
+    if [ "$flutter_running" = false ]; then
+        local app_pid=$(pgrep -f "${FLUTTER_APP_BUNDLE_NAME}.app/Contents/MacOS" 2>/dev/null | head -1 || true)
+        if [ -n "$app_pid" ]; then
+            echo -e "${GREEN}●${NC} Flutter UI: ${GREEN}RUNNING${NC} [PID: $app_pid]"
+        else
+            echo -e "${RED}○${NC} Flutter UI: ${RED}STOPPED${NC}"
+        fi
+    fi
+
+    echo ""
+    echo -e "${GREEN}Logs:${NC}"
+    echo "  quantumctl logs backend   - Backend logs"
+    echo "  quantumctl logs flutter   - Flutter logs"
+    echo "  quantumctl logs all       - Tail all logs"
+}
+
+cmd_restart() {
+    cmd_down
+    sleep 2
+    cmd_up "$@"
+}
+
+cmd_logs() {
+    local target="${1:-backend}"
+
+    case "$target" in
+        backend)
+            log_file="$LOG_DIR/backend.log"
+            ;;
+        flutter)
+            log_file="$LOG_DIR/flutter.log"
+            ;;
+        all)
+            echo "Tailing all logs (Ctrl+C to exit)..."
+            tail -f "$LOG_DIR"/*.log "$RUNS_LOG_DIR"/*.log 2>/dev/null
+            return
+            ;;
+        *)
+            log_file="$LOG_DIR/$target.log"
+            if [ ! -f "$log_file" ]; then
+                log_file="$RUNS_LOG_DIR/$target.log"
+            fi
+            ;;
+    esac
+
+    if [ -f "$log_file" ]; then
+        echo "Tailing $log_file (Ctrl+C to exit)..."
+        tail -f "$log_file"
+    else
+        echo "Log file not found: $log_file"
+        echo "Available logs:"
+        ls -1 "$LOG_DIR"/*.log "$RUNS_LOG_DIR"/*.log 2>/dev/null || echo "  (none)"
+    fi
+}
+
+usage() {
+    cat << EOF
+${BLUE}QuantumStudio Control Script${NC}
+
+Usage: quantumctl <command> [options]
+
+${GREEN}Service Commands:${NC}
+    up [options]                Start backend + Flutter UI
+        --no-flutter            Skip Flutter UI
+        --flutter-release       Run Flutter in release mode (default: dev)
+    down                        Stop all services
+    restart                     Restart all services
+    status                      Show service status
+
+${GREEN}Backend Commands:${NC}
+    backend start               Start backend only
+    backend stop                Stop backend
+
+${GREEN}Flutter Commands:${NC}
+    flutter start [--dev]       Start Flutter UI
+    flutter stop                Stop Flutter UI
+    flutter build               Build Flutter macOS app
+
+${GREEN}Utility Commands:${NC}
+    logs [service]              Tail logs (backend|flutter|all)
+    clean                       Clean logs and temp files
+    version                     Show version info
+
+${GREEN}Examples:${NC}
+    quantumctl up
+    quantumctl up --no-flutter
+    quantumctl status
+    quantumctl logs backend
+
+EOF
+}
+
+case "${1:-}" in
+    up) shift; cmd_up "$@" ;;
+    down) cmd_down ;;
+    restart) shift; cmd_restart "$@" ;;
+    status) cmd_status ;;
+    backend)
+        case "${2:-}" in
+            start) start_backend ;;
+            stop) stop_backend ;;
+            *) echo "Usage: quantumctl backend {start|stop}" ;;
+        esac
+        ;;
+    flutter)
+        case "${2:-}" in
+            start) start_flutter "${3:-release}" ;;
+            stop) stop_flutter ;;
+            build) build_flutter ;;
+            *) echo "Usage: quantumctl flutter {start|stop|build}" ;;
+        esac
+        ;;
+    logs) shift; cmd_logs "${1:-backend}" ;;
+    clean)
+        echo -e "${BLUE}Cleaning temporary files...${NC}"
+        rm -rf "$LOG_DIR"/*.log 2>/dev/null || true
+        rm -rf "$RUNS_LOG_DIR"/*.log 2>/dev/null || true
+        rm -rf "$PID_DIR"/*.pid 2>/dev/null || true
+        echo -e "${GREEN}Cleaned.${NC}"
+        ;;
+    version)
+        echo -e "${BLUE}QuantumStudio - Benchmark UI${NC}"
+        echo "Version: $APP_VERSION"
+        echo "Root: $ROOT_DIR"
+        echo ""
+        echo "Components:"
+        command -v python3 >/dev/null && echo "  Python: $(python3 --version 2>&1 | cut -d' ' -f2)"
+        command -v flutter >/dev/null && echo "  Flutter: $(flutter --version 2>&1 | head -1 | cut -d' ' -f2)"
+        ;;
+    help|-h|--help) usage ;;
+    *) usage ;;
+esac

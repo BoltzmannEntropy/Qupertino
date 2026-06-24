@@ -1,0 +1,11 @@
+CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO
+FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/audio_session" "${PODS_CONFIGURATION_BUILD_DIR}/device_info_plus" "${PODS_CONFIGURATION_BUILD_DIR}/file_picker" "${PODS_CONFIGURATION_BUILD_DIR}/just_audio" "${PODS_CONFIGURATION_BUILD_DIR}/syncfusion_pdfviewer_macos" "${PODS_CONFIGURATION_BUILD_DIR}/url_launcher_macos"
+GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
+HEADER_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/audio_session/audio_session.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/device_info_plus/device_info_plus.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/file_picker/file_picker.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/just_audio/just_audio.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/syncfusion_pdfviewer_macos/syncfusion_pdfviewer_macos.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/url_launcher_macos/url_launcher_macos.framework/Headers"
+OTHER_LDFLAGS = $(inherited) -framework "audio_session" -framework "device_info_plus" -framework "file_picker" -framework "just_audio" -framework "syncfusion_pdfviewer_macos" -framework "url_launcher_macos"
+PODS_BUILD_DIR = ${BUILD_DIR}
+PODS_CONFIGURATION_BUILD_DIR = ${PODS_BUILD_DIR}/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)
+PODS_PODFILE_DIR_PATH = ${SRCROOT}/.
+PODS_ROOT = ${SRCROOT}/Pods
+PODS_XCFRAMEWORKS_BUILD_DIR = $(PODS_CONFIGURATION_BUILD_DIR)/XCFrameworkIntermediates
+USE_RECURSIVE_SCRIPT_INPUTS_IN_SCRIPT_PHASES = YES

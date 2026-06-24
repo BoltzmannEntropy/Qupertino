@@ -1,0 +1,76 @@
+{
+  "framework": "mlx-quantum",
+  "version": "python",
+  "device": "apple\u2013silicon\u2013mlx",
+  "hardware": "M1 Max",
+  "chip_generation": "M1",
+  "chip_variant": "Max",
+  "circuit_type": "steady_state",
+  "backend": "sv",
+  "platform": "apple-silicon",
+  "results": [
+    {
+      "qubits": 1,
+      "execution_time_ms": 76.50566601753235,
+      "memory_mb": 1.52587890625e-05,
+      "cpu_percent": 51.20405067909972,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 1.52587890625e-05,
+      "memory_measured_mb": 11.09375
+    },
+    {
+      "qubits": 2,
+      "execution_time_ms": 26.589749932289124,
+      "memory_mb": 3.0517578125e-05,
+      "cpu_percent": 79.95938304850995,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 3.0517578125e-05,
+      "memory_measured_mb": 1.953125
+    },
+    {
+      "qubits": 5,
+      "execution_time_ms": 86.7103750705719,
+      "memory_mb": 0.000244140625,
+      "cpu_percent": 73.8239223944089,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 0.000244140625,
+      "memory_measured_mb": 7.203125
+    },
+    {
+      "qubits": 7,
+      "execution_time_ms": 174.35904097557068,
+      "memory_mb": 0.0009765625,
+      "cpu_percent": 100.0,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 0.0009765625,
+      "memory_measured_mb": 24.21875
+    },
+    {
+      "qubits": 10,
+      "execution_time_ms": 9278.418250024319,
+      "memory_mb": 0.0078125,
+      "cpu_percent": 68.23220110802191,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 0.0078125,
+      "memory_measured_mb": 1316.78125
+    },
+    {
+      "qubits": 11,
+      "execution_time_ms": 49395.65354204178,
+      "memory_mb": 0.015625,
+      "cpu_percent": 53.61451484280799,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 0.015625,
+      "memory_measured_mb": 5114.734375
+    },
+    {
+      "qubits": 12,
+      "execution_time_ms": 279278.89770805836,
+      "memory_mb": 0.03125,
+      "cpu_percent": 42.07929706269715,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 0.03125,
+      "memory_measured_mb": 1851.09375
+    }
+  ]
+}

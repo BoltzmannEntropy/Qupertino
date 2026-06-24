@@ -1,0 +1,171 @@
+{
+  "circuit_type": "tfim",
+  "results": [
+    {
+      "qubits": 1,
+      "execution_time_ms": 3.7052090167999268,
+      "memory_mb": 1.52587890625e-05,
+      "cpu_percent": 100.0,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 1.52587890625e-05,
+      "memory_measured_mb": 2.53125,
+      "mps": {
+        "bond_max": 1,
+        "bond_mean": 1.0,
+        "truncations": 0,
+        "truncated": false,
+        "bond_dims": [],
+        "stopped_on_trunc": false
+      }
+    },
+    {
+      "qubits": 2,
+      "execution_time_ms": 25.4167919754982,
+      "memory_mb": 6.103515625e-05,
+      "cpu_percent": 74.55307506260758,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 3.0517578125e-05,
+      "memory_measured_mb": 1.71875,
+      "mps": {
+        "bond_max": 2,
+        "bond_mean": 2.0,
+        "truncations": 1,
+        "truncated": true,
+        "bond_dims": [
+          2
+        ],
+        "stopped_on_trunc": false
+      }
+    },
+    {
+      "qubits": 5,
+      "execution_time_ms": 64.90495800971985,
+      "memory_mb": 0.00054931640625,
+      "cpu_percent": 31.9929334164123,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 0.000244140625,
+      "memory_measured_mb": 0.421875,
+      "mps": {
+        "bond_max": 4,
+        "bond_mean": 3.0,
+        "truncations": 8,
+        "truncated": true,
+        "bond_dims": [
+          2,
+          4,
+          4,
+          2
+        ],
+        "stopped_on_trunc": false
+      }
+    },
+    {
+      "qubits": 7,
+      "execution_time_ms": 86.78362500667572,
+      "memory_mb": 0.00225830078125,
+      "cpu_percent": 38.44043158768001,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 0.0009765625,
+      "memory_measured_mb": 0.25,
+      "mps": {
+        "bond_max": 8,
+        "bond_mean": 4.666666666666667,
+        "truncations": 14,
+        "truncated": true,
+        "bond_dims": [
+          2,
+          4,
+          8,
+          8,
+          4,
+          2
+        ],
+        "stopped_on_trunc": false
+      }
+    },
+    {
+      "qubits": 10,
+      "execution_time_ms": 121.31387501955032,
+      "memory_mb": 0.02081298828125,
+      "cpu_percent": 40.08939619821916,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 0.0078125,
+      "memory_measured_mb": 0.96875,
+      "mps": {
+        "bond_max": 32,
+        "bond_mean": 10.222222222222221,
+        "truncations": 32,
+        "truncated": true,
+        "bond_dims": [
+          2,
+          4,
+          8,
+          16,
+          32,
+          16,
+          8,
+          4,
+          2
+        ],
+        "stopped_on_trunc": false
+      }
+    },
+    {
+      "qubits": 11,
+      "execution_time_ms": 538.7081249952316,
+      "memory_mb": 0.03643798828125,
+      "cpu_percent": 100.0,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 0.015625,
+      "memory_measured_mb": 1.109375,
+      "mps": {
+        "bond_max": 32,
+        "bond_mean": 12.4,
+        "truncations": 39,
+        "truncated": true,
+        "bond_dims": [
+          2,
+          4,
+          8,
+          16,
+          32,
+          32,
+          16,
+          8,
+          4,
+          2
+        ],
+        "stopped_on_trunc": false
+      }
+    },
+    {
+      "qubits": 12,
+      "execution_time_ms": 581.4332080483437,
+      "memory_mb": 0.08331298828125,
+      "cpu_percent": 100.0,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 0.03125,
+      "memory_measured_mb": 1.5625,
+      "mps": {
+        "bond_max": 64,
+        "bond_mean": 17.09090909090909,
+        "truncations": 47,
+        "truncated": true,
+        "bond_dims": [
+          2,
+          4,
+          8,
+          16,
+          32,
+          64,
+          32,
+          16,
+          8,
+          4,
+          2
+        ],
+        "stopped_on_trunc": false
+      }
+    }
+  ]
+}
