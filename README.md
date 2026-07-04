@@ -69,6 +69,11 @@ This repository is designed for publication-grade reproducibility:
 
 Qupertino ships **two measured performance tiers**. The pure-MLX tier dispatches structured gate classes to specialized MLX kernels (diagonal gates as broadcast phase multiplies, controlled gates as masked half-state updates, SWAP as an axis permutation, runtime fusion of equal-angle ZZ Trotter layers). The **Metal shader tier** (`MLXQ_METAL_KERNELS=1`) adds hand-written kernels in `src/mlxq/shaders/` for every structured layer family, reached through semantics-preserving fusion detectors and parity-tested against the pure path (251 tests).
 
+<div align="center">
+  <img src="assets/perf-charts/chart_4way_25q.png" alt="Wall time at 25 qubits across four backends" width="820"/>
+  <br/><em>25-qubit wall time, same machine, gate-identical circuits (log scale, lower is better). The Metal shader tier — blue — is fastest in every cell.</em>
+</div>
+
 Four-way interleaved campaign on M1 Max (two warmups, ten measured repeats per cell, all four backends round-robin inside every repeat, gate-identical circuits, mean seconds at 25q):
 
 | Workload @ 25q | Qupertino Metal | Qupertino MLX | Aer CPU | PennyLane lightning |
@@ -81,6 +86,11 @@ Four-way interleaved campaign on M1 Max (two warmups, ten measured repeats per c
 | GHZ | **0.022** | 0.27 | 0.69 | 0.42 |
 
 The Metal tier is **fastest in all 18 comparison cells** (15/20/25 qubits), with 25-qubit paired per-repeat ratios of **23–47× over Aer** and **19–95× over PennyLane** — and its gate-stream QFT (59 ms) beats MLX's own `mx.fft` primitive (77 ms). The pure-MLX tier is fastest among the CPU-comparable trio on 4 of 6 workloads at 25q (Grover is a statistical tie with Aer; small gate-sparse circuits at 15q favor the CPU baselines). A paired ablation with dispatch disabled (`MLXQ_DENSE_ONLY=1`) attributes **25–33×** to kernel specialization itself. A separate campaign against PennyLane's OpenMP-parallel `lightning.kokkos` reached the same verdict for the pure tier (fastest in 16/18 cells). Full protocol, t-based CIs, raw artifacts: `paper/tqc-acm-2026/evidence_artifacts/`.
+
+<p align="center">
+  <img src="assets/perf-charts/chart_scaling_qft.png" alt="QFT scaling 15-25 qubits" width="410"/>
+  <img src="assets/perf-charts/chart_scaling_tfim.png" alt="TFIM Trotter scaling 15-25 qubits" width="410"/>
+</p>
 
 ### The Metal shader tier
 
@@ -95,7 +105,14 @@ Seven kernel families in one folder (`src/mlxq/shaders/`, design + measurements 
 
 The shader tier also engages on the **OpenQASM import path**: the full local QASM corpus (40 executed circuits, QASMBench-derived) matches the pure path to ≤5e-7 everywhere, with structured circuits accelerating (ghz_state_n23 9.1×, cat_state_n22 8.0×, ising_n26 2.2×) and pre-decomposed cx+rz circuits (e.g. QASMBench qft_n18) correctly falling through to the pure path at parity — recognizing decomposed 2-qubit blocks is noted future work. Artifact: `paper/tqc-acm-2026/evidence_artifacts/qasm_shader_sweep_20260704/`.
 
-Full-suite paired sweep (29 workloads at 25q, pure vs Metal alternating within every repeat): **26 of 29 workloads accelerate, 4.7–25×** for those with fusable layer structure (TFIM 2nd order 25×, long-range Ising 24×, Heisenberg 13.8×, variational 14.3×, QCBM 12×, Grover 11.5×). The three 1.0× rows are structural and documented (cross-family Trotter interleave, isolated CZs, strict RY/CNOT alternation). Four Codex CLI review rounds shaped and audited the kernels (archived under `paper/tqc-acm-2026/reviews_shaders_v2/`), catching real bugs: a wrong radix-4 derivation (retracted by the reviewer itself), a float32/rtol hole that silently dropped small-angle gates, and 1.25e-5 phase drift in 300-term products (fixed with grouped double-precision LUTs).
+Full-suite paired sweep (29 workloads at 25q, pure vs Metal alternating within every repeat): **26 of 29 workloads accelerate, 4.7–25×** for those with fusable layer structure (TFIM 2nd order 25×, long-range Ising 24×, Heisenberg 13.8×, variational 14.3×, QCBM 12×, Grover 11.5×). The three 1.0× rows are structural and documented (cross-family Trotter interleave, isolated CZs, strict RY/CNOT alternation).
+
+<div align="center">
+  <img src="assets/perf-charts/chart_speedup_sweep.png" alt="Metal shader speedup over pure MLX across 29 workloads" width="720"/>
+  <br/><em>Every gate-based workload, Metal shaders vs pure MLX (paired, same session). Blue ≥ 4×, green = VQE (residual is energy evaluation), grey = structurally unfusable and correctly left at parity.</em>
+</div>
+
+Four Codex CLI review rounds shaped and audited the kernels (archived under `paper/tqc-acm-2026/reviews_shaders_v2/`), catching real bugs: a wrong radix-4 derivation (retracted by the reviewer itself), a float32/rtol hole that silently dropped small-angle gates, and 1.25e-5 phase drift in 300-term products (fixed with grouped double-precision LUTs).
 
 ### Full-suite refresh (all 21 benchmark families, `bench.sh --repro`)
 
