@@ -1,0 +1,2 @@
+circuit_type,backend,qubits,warmup,index,wall_ms,cpu_s,delta_mb,gates,sync_json,mps_json
+time_evolution,mps,2,0,1,9.011375,0.003248,0.000000,36,"{""metal_synchronize"": false, ""mx_eval_scalar"": true}","{""bond_dims"": [2], ""bond_max"": 2, ""bond_mean"": 2.0, ""stopped_on_trunc"": false, ""truncated"": true, ""truncations"": 1}"

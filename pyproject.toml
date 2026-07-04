@@ -30,6 +30,11 @@ backend = [
 tests = [
   "pennylane",
 ]
+baselines = [
+  "pennylane",
+  "qiskit",
+  "qiskit-aer",
+]
 
 [tool.setuptools]
 package-dir = {"" = "src"}

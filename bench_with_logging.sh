@@ -5,7 +5,16 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 export PYTHONPATH="${ROOT_DIR}/src"
-PYTHON_BIN="${PYTHON_BIN:-$(command -v python3)}"
+if [[ -z "${PYTHON_BIN:-}" ]]; then
+  if [[ -x "${ROOT_DIR}/.runtime-venv/bin/python" ]]; then
+    PYTHON_BIN="${ROOT_DIR}/.runtime-venv/bin/python"
+  elif [[ -x "${ROOT_DIR}/.venv/bin/python" ]]; then
+    PYTHON_BIN="${ROOT_DIR}/.venv/bin/python"
+  else
+    PYTHON_BIN="$(command -v python3)"
+  fi
+fi
+export PYTHON_BIN
 
 BENCH_ROOT="${ROOT_DIR}/bench"
 if [[ -z "${MLXQ_BENCH_OUT_DIR:-}" ]]; then
@@ -66,6 +75,9 @@ Options:
   --circuit NAME               Single-circuit mode (e.g., qaoa)
   --simulate-limit N           Cap qubits for single-circuit run
   --save-plots|--no-save-plots Save per-bench plots (MLXQ_SAVE_PLOTS)
+  --repeats N                  Measured repeats per qubit point (MLXQ_BENCH_REPEATS)
+  --warmups N                  Warmup runs per qubit point, excluded from summaries (MLXQ_BENCH_WARMUPS)
+  --repro                      Reproducibility preset: --warmups 1 --repeats 5
   -h, --help                   Show this help
 EOF
 }
@@ -85,6 +97,12 @@ while [[ ${1:-} != "" ]]; do
     --all-qubits) N="${2:-}"; [[ -z "$N" ]] && { echo "--all-qubits requires N" >&2; exit 1; }; export MLXQ_PUB_QUBITS="1-${N}"; shift 2 ;;
     --save-plots) export MLXQ_SAVE_PLOTS=1; shift ;;
     --no-save-plots) export MLXQ_SAVE_PLOTS=0; shift ;;
+    --repeats) export MLXQ_BENCH_REPEATS="${2:-}"; shift 2 ;;
+    --warmups) export MLXQ_BENCH_WARMUPS="${2:-}"; shift 2 ;;
+    --repro)
+      export MLXQ_BENCH_WARMUPS="${MLXQ_BENCH_WARMUPS:-1}"
+      export MLXQ_BENCH_REPEATS="${MLXQ_BENCH_REPEATS:-5}"
+      shift ;;
     --circuit) export MLXQ_ONE_CIRCUIT="${2:-}"; shift 2 ;;
     --simulate-limit) export MLXQ_ONE_CAP="${2:-}"; shift 2 ;;
     --mps-dmax) export MLXQ_MPS_DMAX="${2:-}"; shift 2 ;;

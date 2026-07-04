@@ -1,0 +1,115 @@
+{
+  "framework": "mlx-quantum",
+  "version": "python",
+  "device": "apple\u2013silicon\u2013mlx",
+  "hardware": "M1 Max",
+  "chip_generation": "M1",
+  "chip_variant": "Max",
+  "circuit_type": "time_evolution",
+  "backend": "mps",
+  "platform": "apple-silicon",
+  "manifest_file": "run_manifest.json",
+  "benchmark_protocol": {
+    "clock": "time.perf_counter via mlxq.metrics.now_ms",
+    "timing_window": "inside each simulate_* function, after circuit construction and before final forced evaluation",
+    "synchronization": "device-side mx.eval of |amplitude|^2 (probabilities_array) plus best-effort mx.eval scalar and mx.metal.synchronize when available",
+    "summary_statistic": "mean wall-clock milliseconds over measured repeats",
+    "raw_distribution_files": [
+      "<benchmark>_raw_runs.csv",
+      "<benchmark>_raw_runs.json",
+      "<benchmark>_timing_summary.csv"
+    ]
+  },
+  "external_baseline_availability": {
+    "pennylane": {
+      "description": "PennyLane Python package",
+      "available": true
+    },
+    "qiskit": {
+      "description": "Qiskit Python package",
+      "available": true
+    },
+    "qulacs": {
+      "description": "Qulacs Python package",
+      "available": false
+    },
+    "cupy": {
+      "description": "CuPy Python package",
+      "available": false
+    },
+    "cuquantum": {
+      "description": "cuQuantum Python package",
+      "available": false
+    },
+    "custatevec_tool": {
+      "description": "Repository helper for CUDA/cuStateVec comparison runs",
+      "available": true,
+      "path": "tools/custatevec_bench.py",
+      "note": "Requires a CUDA/cuQuantum host; it is not an Apple Silicon co-located baseline."
+    }
+  },
+  "results": [
+    {
+      "qubits": 2,
+      "execution_time_ms": 9.011375069618225,
+      "memory_mb": 6.103515625e-05,
+      "cpu_percent": 36.043333840917356,
+      "gpu_percent": 0.0,
+      "memory_approx_mb": 3.0517578125e-05,
+      "memory_measured_mb": 0.0,
+      "timing": {
+        "repeats": 1,
+        "wall_ms": {
+          "mean": 9.011375069618225,
+          "median": 9.011375069618225,
+          "stdev": 0.0,
+          "stderr": 0.0,
+          "ci95": 0.0,
+          "min": 9.011375069618225,
+          "max": 9.011375069618225
+        },
+        "cpu_s": {
+          "mean": 0.0032479999999996956,
+          "median": 0.0032479999999996956,
+          "stdev": 0.0,
+          "stderr": 0.0,
+          "ci95": 0.0,
+          "min": 0.0032479999999996956,
+          "max": 0.0032479999999996956
+        },
+        "delta_mb": {
+          "mean": 0.0,
+          "median": 0.0,
+          "stdev": 0.0,
+          "stderr": 0.0,
+          "ci95": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "raw_wall_ms": [
+          9.011375069618225
+        ],
+        "warmups": 0,
+        "measured_repeats": 1,
+        "raw_runs_file": "time_evolution_mps_raw_runs.csv"
+      },
+      "mps": {
+        "bond_max": 2,
+        "bond_mean": 2.0,
+        "truncations": 1,
+        "truncated": true,
+        "bond_dims": [
+          2
+        ],
+        "stopped_on_trunc": false
+      }
+    }
+  ],
+  "mps": {
+    "dmax": 32,
+    "eps": 1e-10,
+    "bond_max_over_runs": 2,
+    "early_stop_bmax": 1,
+    "mode": "mps"
+  }
+}

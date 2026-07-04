@@ -1,0 +1,75 @@
+{
+  "generated_at_utc": "2026-07-04T13:51:10.481371+00:00",
+  "repo_root": "/Volumes/SSD4tb/DP27/Dropbox/DSS/artifacts/code/QuantumStudioPRJ/QuantumStudioCODE",
+  "git_commit": "e2573703f27de1c12264202220220ef234c00ac6",
+  "git_branch": "main",
+  "python": {
+    "executable": "/Volumes/SSD4tb/DP27/Dropbox/DSS/artifacts/code/QuantumStudioPRJ/QuantumStudioCODE/.runtime-venv/bin/python",
+    "version": "3.11.3 (main, Mar 19 2025, 19:58:17) [Clang 14.0.3 (clang-1403.0.22.14.1)]"
+  },
+  "platform": {
+    "system": "Darwin",
+    "release": "25.3.0",
+    "version": "Darwin Kernel Version 25.3.0: Wed Jan 28 20:53:15 PST 2026; root:xnu-12377.81.4~5/RELEASE_ARM64_T6000",
+    "machine": "arm64",
+    "processor": "arm",
+    "platform": "macOS-26.3-arm64-arm-64bit",
+    "mac_ver": "26.3"
+  },
+  "packages": {
+    "mlx": "0.30.6",
+    "numpy": "2.4.6",
+    "rich": "15.0.0"
+  },
+  "mlx": {
+    "default_device": "Device(gpu, 0)",
+    "metal_available": true
+  },
+  "benchmark_protocol": {
+    "clock": "time.perf_counter via mlxq.metrics.now_ms",
+    "timing_window": "inside each simulate_* function, after circuit construction and before final forced evaluation",
+    "synchronization": "device-side mx.eval of |amplitude|^2 (probabilities_array) plus best-effort mx.eval scalar and mx.metal.synchronize when available",
+    "summary_statistic": "mean wall-clock milliseconds over measured repeats",
+    "raw_distribution_files": [
+      "<benchmark>_raw_runs.csv",
+      "<benchmark>_raw_runs.json",
+      "<benchmark>_timing_summary.csv"
+    ]
+  },
+  "external_baseline_availability": {
+    "pennylane": {
+      "description": "PennyLane Python package",
+      "available": true
+    },
+    "qiskit": {
+      "description": "Qiskit Python package",
+      "available": true
+    },
+    "qulacs": {
+      "description": "Qulacs Python package",
+      "available": false
+    },
+    "cupy": {
+      "description": "CuPy Python package",
+      "available": false
+    },
+    "cuquantum": {
+      "description": "cuQuantum Python package",
+      "available": false
+    },
+    "custatevec_tool": {
+      "description": "Repository helper for CUDA/cuStateVec comparison runs",
+      "available": true,
+      "path": "tools/custatevec_bench.py",
+      "note": "Requires a CUDA/cuQuantum host; it is not an Apple Silicon co-located baseline."
+    }
+  },
+  "environment": {
+    "MLXQ_BACKEND": "mps",
+    "MLXQ_MPS_DMAX": "32",
+    "MLXQ_MPS_EARLY_STOP_BMAX": "1",
+    "MLXQ_MPS_EPS": "1e-10",
+    "MLXQ_PRINT_ASCII": "0",
+    "MLXQ_SAVE_PLOTS": "0"
+  }
+}

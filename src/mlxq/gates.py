@@ -226,12 +226,9 @@ def MultiControlledZ(n_controls: int):
 
 
 def _controlled_from_single(single: mx.array):
-    mx.eval(single)
-    u = single.tolist()
-    return mx.array(
-        [
-            [1+0j,0+0j,0+0j,0+0j],
-            [0+0j,1+0j,0+0j,0+0j],
-            [0+0j,0+0j,u[0][0],u[0][1]],
-            [0+0j,0+0j,u[1][0],u[1][1]],
-        ], mx.complex64)
+    # Block-compose on device; no host round-trip (mx.eval/tolist)
+    eye = mx.array([[1+0j, 0+0j], [0+0j, 1+0j]], mx.complex64)
+    zero = mx.array([[0+0j, 0+0j], [0+0j, 0+0j]], mx.complex64)
+    top = mx.concatenate([eye, zero], axis=1)
+    bot = mx.concatenate([zero, single.astype(mx.complex64)], axis=1)
+    return mx.concatenate([top, bot], axis=0)

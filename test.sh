@@ -7,6 +7,16 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 export PYTHONPATH="${ROOT_DIR}/src"
 # Use non-interactive backend for plotting tests
 export MPLBACKEND="Agg"
+if [[ -z "${PYTHON_BIN:-}" ]]; then
+  if [[ -x "${ROOT_DIR}/.runtime-venv/bin/python" ]]; then
+    PYTHON_BIN="${ROOT_DIR}/.runtime-venv/bin/python"
+  elif [[ -x "${ROOT_DIR}/.venv/bin/python" ]]; then
+    PYTHON_BIN="${ROOT_DIR}/.venv/bin/python"
+  else
+    PYTHON_BIN="$(command -v python3)"
+  fi
+fi
+export PYTHON_BIN
 
 usage() {
   cat <<EOF
@@ -55,7 +65,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [[ "$MODE" == "runner" ]]; then
-  exec python3 "${ROOT_DIR}/src/tests/run_core_tests.py"
+  exec "${PYTHON_BIN}" "${ROOT_DIR}/src/tests/run_core_tests.py"
 fi
 
 ARGS=( )
@@ -63,6 +73,16 @@ ARGS=( )
 [[ "$FAILFAST" == "1" ]] && ARGS+=( -x )
 [[ "$VERBOSE" == "1" ]] && ARGS+=( -vv )
 
-# pytest.ini already sets -q; let user override with --verbose
-exec pytest "${ARGS[@]}" "${EXTRA_PYTEST_ARGS[@]}"
-
+# pytest.ini already sets -q; let user override with --verbose. Bash 3.2 with
+# `set -u` can treat empty array expansion as unbound, so build argv first.
+FINAL_ARGS=()
+if [[ ${#ARGS[@]} -gt 0 ]]; then
+  FINAL_ARGS+=("${ARGS[@]}")
+fi
+if [[ ${#EXTRA_PYTEST_ARGS[@]} -gt 0 ]]; then
+  FINAL_ARGS+=("${EXTRA_PYTEST_ARGS[@]}")
+fi
+if [[ ${#FINAL_ARGS[@]} -gt 0 ]]; then
+  exec "${PYTHON_BIN}" -m pytest "${FINAL_ARGS[@]}"
+fi
+exec "${PYTHON_BIN}" -m pytest

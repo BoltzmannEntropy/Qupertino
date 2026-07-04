@@ -79,6 +79,10 @@ class _BenchmarksScreenState extends State<BenchmarksScreen> {
   final TextEditingController _qasmTimeoutController = TextEditingController();
   final TextEditingController _qasmMemController = TextEditingController();
   final TextEditingController _qasmSimLimitController = TextEditingController();
+  final TextEditingController _benchmarkWarmupsController =
+      TextEditingController(text: '0');
+  final TextEditingController _benchmarkRepeatsController =
+      TextEditingController(text: '1');
   final TextEditingController _envOverridesController = TextEditingController();
   bool _useDefaultQubits = false;
   bool _qasmIncludeLarge = false;
@@ -140,6 +144,8 @@ class _BenchmarksScreenState extends State<BenchmarksScreen> {
     _qasmTimeoutController.dispose();
     _qasmMemController.dispose();
     _qasmSimLimitController.dispose();
+    _benchmarkWarmupsController.dispose();
+    _benchmarkRepeatsController.dispose();
     _envOverridesController.dispose();
     super.dispose();
   }
@@ -364,6 +370,24 @@ class _BenchmarksScreenState extends State<BenchmarksScreen> {
         return;
       }
     }
+    var benchmarkWarmups = 0;
+    if (_benchmarkWarmupsController.text.trim().isNotEmpty) {
+      final parsed = int.tryParse(_benchmarkWarmupsController.text.trim());
+      if (parsed == null || parsed < 0) {
+        _showSnack('Benchmark warmups must be zero or a whole number.');
+        return;
+      }
+      benchmarkWarmups = parsed;
+    }
+    var benchmarkRepeats = 1;
+    if (_benchmarkRepeatsController.text.trim().isNotEmpty) {
+      final parsed = int.tryParse(_benchmarkRepeatsController.text.trim());
+      if (parsed == null || parsed < 1) {
+        _showSnack('Benchmark repeats must be at least 1.');
+        return;
+      }
+      benchmarkRepeats = parsed;
+    }
     final envOverrides = _parseEnvOverrides(_envOverridesController.text);
     if (envOverrides == null) {
       _showSnack('Env overrides must be KEY=VALUE per line.');
@@ -393,6 +417,8 @@ class _BenchmarksScreenState extends State<BenchmarksScreen> {
         qasmMaxMemMb: qasmMem,
         qasmIncludeLarge: _qasmIncludeLarge,
         qasmSimulateLimit: qasmSimLimit,
+        benchmarkWarmups: benchmarkWarmups,
+        benchmarkRepeats: benchmarkRepeats,
         benchpress: _benchpress,
         envOverrides: envOverrides,
       );
@@ -950,6 +976,55 @@ class _BenchmarksScreenState extends State<BenchmarksScreen> {
                   ),
                   controller: _maxQubitsController,
                   keyboardType: TextInputType.number,
+                ),
+                const SizedBox(height: 12),
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Benchmark protocol',
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    final compact = constraints.maxWidth < 520;
+                    final fields = [
+                      TextField(
+                        decoration: const InputDecoration(
+                          labelText: 'Warmups',
+                          hintText: '0',
+                        ),
+                        controller: _benchmarkWarmupsController,
+                        keyboardType: TextInputType.number,
+                      ),
+                      TextField(
+                        decoration: const InputDecoration(
+                          labelText: 'Repeats',
+                          hintText: '1',
+                        ),
+                        controller: _benchmarkRepeatsController,
+                        keyboardType: TextInputType.number,
+                      ),
+                    ];
+                    if (compact) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          fields[0],
+                          const SizedBox(height: 8),
+                          fields[1],
+                        ],
+                      );
+                    }
+                    return Row(
+                      children: [
+                        Expanded(child: fields[0]),
+                        const SizedBox(width: 12),
+                        Expanded(child: fields[1]),
+                      ],
+                    );
+                  },
                 ),
                 const SizedBox(height: 12),
                 const Align(

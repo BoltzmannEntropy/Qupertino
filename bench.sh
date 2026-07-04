@@ -7,7 +7,16 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 export PYTHONPATH="${ROOT_DIR}/src"
 BENCH_ROOT="${ROOT_DIR}/bench"
-PYTHON_BIN="${PYTHON_BIN:-$(command -v python3)}"
+if [[ -z "${PYTHON_BIN:-}" ]]; then
+  if [[ -x "${ROOT_DIR}/.runtime-venv/bin/python" ]]; then
+    PYTHON_BIN="${ROOT_DIR}/.runtime-venv/bin/python"
+  elif [[ -x "${ROOT_DIR}/.venv/bin/python" ]]; then
+    PYTHON_BIN="${ROOT_DIR}/.venv/bin/python"
+  else
+    PYTHON_BIN="$(command -v python3)"
+  fi
+fi
+export PYTHON_BIN
 
 # Per-run output directory (can be overridden externally)
 if [[ -z "${MLXQ_BENCH_OUT_DIR:-}" ]]; then
@@ -60,6 +69,9 @@ Options:
   --simulate-limit N           Cap qubits for single-circuit run
   --save-plots                 Save per-benchmark plots (default) and aggregate
   --no-save-plots              Do not save plots (MLXQ_SAVE_PLOTS=0)
+  --repeats N                  Measured repeats per qubit point (MLXQ_BENCH_REPEATS)
+  --warmups N                  Warmup runs per qubit point, excluded from summaries (MLXQ_BENCH_WARMUPS)
+  --repro                      Reproducibility preset: --warmups 1 --repeats 5
   --backend sv|mps             Choose simulation backend (env MLXQ_BACKEND)
   --mps-dmax N                 Set MLXQ_MPS_DMAX (bond cap)
   --mps-eps X                  Set MLXQ_MPS_EPS (truncation epsilon)
@@ -142,6 +154,19 @@ while [[ $# -gt 0 ]]; do
     --no-save-plots)
       SAVE_PLOTS=0
       export MLXQ_SAVE_PLOTS=0
+      shift
+      ;;
+    --repeats)
+      export MLXQ_BENCH_REPEATS="${2:-}"
+      shift 2
+      ;;
+    --warmups)
+      export MLXQ_BENCH_WARMUPS="${2:-}"
+      shift 2
+      ;;
+    --repro)
+      export MLXQ_BENCH_WARMUPS="${MLXQ_BENCH_WARMUPS:-1}"
+      export MLXQ_BENCH_REPEATS="${MLXQ_BENCH_REPEATS:-5}"
       shift
       ;;
     --qasm-max-qubits)

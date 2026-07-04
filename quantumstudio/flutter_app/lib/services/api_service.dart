@@ -113,6 +113,8 @@ class ApiService {
     int? qasmMaxMemMb,
     bool qasmIncludeLarge = false,
     int? qasmSimulateLimit,
+    int benchmarkWarmups = 0,
+    int benchmarkRepeats = 1,
     bool benchpress = false,
     Map<String, String> envOverrides = const {},
   }) async {
@@ -129,6 +131,8 @@ class ApiService {
         if (qasmMaxMemMb != null) 'qasm_max_mem_mb': qasmMaxMemMb,
         'qasm_include_large': qasmIncludeLarge,
         if (qasmSimulateLimit != null) 'qasm_simulate_limit': qasmSimulateLimit,
+        'benchmark_warmups': benchmarkWarmups,
+        'benchmark_repeats': benchmarkRepeats,
         'benchpress': benchpress,
         if (envOverrides.isNotEmpty) 'env_overrides': envOverrides,
       },

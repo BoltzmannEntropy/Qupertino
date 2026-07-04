@@ -143,6 +143,26 @@ class RunRequestValidationTests(unittest.TestCase):
         self.assertIn("TEST_FLAG", request.env_overrides)
         self.assertEqual(request.env_overrides["TEST_FLAG"], "1")
 
+    def test_repro_protocol_fields_are_validated(self):
+        request = backend.RunRequest(
+            benchmark_configs=[backend.BenchmarkConfig(name="ghz", backend="sv")],
+            benchmark_warmups=1,
+            benchmark_repeats=5,
+        )
+        self.assertEqual(request.benchmark_warmups, 1)
+        self.assertEqual(request.benchmark_repeats, 5)
+
+        with self.assertRaises(ValidationError):
+            backend.RunRequest(
+                benchmark_configs=[backend.BenchmarkConfig(name="ghz", backend="sv")],
+                benchmark_warmups=-1,
+            )
+        with self.assertRaises(ValidationError):
+            backend.RunRequest(
+                benchmark_configs=[backend.BenchmarkConfig(name="ghz", backend="sv")],
+                benchmark_repeats=0,
+            )
+
 
 if __name__ == "__main__":
     unittest.main()

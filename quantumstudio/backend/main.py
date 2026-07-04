@@ -718,6 +718,8 @@ class RunRequest(BaseModel):
     qasm_max_mem_mb: Optional[int] = Field(None, ge=16, le=1_048_576)
     qasm_include_large: bool = False
     qasm_simulate_limit: Optional[int] = Field(None, ge=1, le=10_000_000)
+    benchmark_warmups: int = Field(0, ge=0, le=100)
+    benchmark_repeats: int = Field(1, ge=1, le=100)
     benchpress: bool = False
     env_overrides: Dict[str, str] = Field(default_factory=dict)
 
@@ -740,6 +742,10 @@ class RunRequest(BaseModel):
                 raise ValueError(f"Value too long for env variable: {env_key}")
             cleaned[env_key] = env_val
         return cleaned
+
+
+BenchmarkConfig.model_rebuild(_types_namespace=globals())
+RunRequest.model_rebuild(_types_namespace=globals())
 
 
 class SettingsUpdate(BaseModel):
@@ -1027,7 +1033,8 @@ def _collect_outputs(
             # Filter to files matching the benchmarks that were actually run
             if benchmark_names:
                 stem = path.stem.lower()
-                if not any(bname in stem for bname in benchmark_names):
+                shared_artifact = path.name in {"run_manifest.json"}
+                if not shared_artifact and not any(bname in stem for bname in benchmark_names):
                     continue
             url = f"/bench/{rel_path}"
             if url in seen_urls:
@@ -1051,6 +1058,8 @@ def _run_job(run_id: str, payload: RunRequest) -> None:
 
     base_env = os.environ.copy()
     base_env["MLXQ_SAVE_PLOTS"] = "1" if payload.save_plots else "0"
+    base_env["MLXQ_BENCH_WARMUPS"] = str(payload.benchmark_warmups)
+    base_env["MLXQ_BENCH_REPEATS"] = str(payload.benchmark_repeats)
     default_max_qubits = payload.max_qubits or 25
     run_env_overrides = {k: v for k, v in payload.env_overrides.items() if str(v).strip()}
 
@@ -1079,6 +1088,8 @@ def _run_job(run_id: str, payload: RunRequest) -> None:
                     **run_env_overrides,
                     "MLXQ_BACKEND": cfg.backend or None,
                     "MLXQ_SAVE_PLOTS": base_env.get("MLXQ_SAVE_PLOTS"),
+                    "MLXQ_BENCH_WARMUPS": base_env.get("MLXQ_BENCH_WARMUPS"),
+                    "MLXQ_BENCH_REPEATS": base_env.get("MLXQ_BENCH_REPEATS"),
                 }
 
                 log_file.write(f"\n=== Running {cfg.name} (qubits={cfg.qubits_spec}, backend={cfg.backend}) ===\n")

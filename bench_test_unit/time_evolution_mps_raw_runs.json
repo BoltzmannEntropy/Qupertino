@@ -1,0 +1,58 @@
+{
+  "circuit_type": "time_evolution",
+  "backend": "mps",
+  "manifest_file": "run_manifest.json",
+  "benchmark_protocol": {
+    "clock": "time.perf_counter via mlxq.metrics.now_ms",
+    "timing_window": "inside each simulate_* function, after circuit construction and before final forced evaluation",
+    "synchronization": "device-side mx.eval of |amplitude|^2 (probabilities_array) plus best-effort mx.eval scalar and mx.metal.synchronize when available",
+    "summary_statistic": "mean wall-clock milliseconds over measured repeats",
+    "raw_distribution_files": [
+      "<benchmark>_raw_runs.csv",
+      "<benchmark>_raw_runs.json",
+      "<benchmark>_timing_summary.csv"
+    ]
+  },
+  "raw_runs": [
+    {
+      "circuit_type": "time_evolution",
+      "backend": "mps",
+      "qubits": 2,
+      "warmup": false,
+      "index": 1,
+      "wall_ms": 9.011375069618225,
+      "cpu_s": 0.0032479999999996956,
+      "delta_mb": 0.0,
+      "gates": 36,
+      "sync": {
+        "mx_eval_scalar": true,
+        "metal_synchronize": false
+      },
+      "mps": {
+        "bond_max": 2,
+        "bond_mean": 2.0,
+        "truncations": 1,
+        "truncated": true,
+        "bond_dims": [
+          2
+        ],
+        "stopped_on_trunc": false
+      }
+    }
+  ],
+  "timing_summary": [
+    {
+      "qubits": 2,
+      "warmups": 0,
+      "repeats": 1,
+      "mean_ms": 9.011375069618225,
+      "median_ms": 9.011375069618225,
+      "stdev_ms": 0.0,
+      "stderr_ms": 0.0,
+      "ci95_ms": 0.0,
+      "min_ms": 9.011375069618225,
+      "max_ms": 9.011375069618225,
+      "summary_statistic": "mean_ms"
+    }
+  ]
+}

@@ -200,10 +200,14 @@ def run_job(payload: Dict[str, Any]) -> int:
     benchmark_configs = payload.get("benchmark_configs", [])
     save_plots = payload.get("save_plots", True)
     max_qubits = payload.get("max_qubits") or 25
+    benchmark_warmups = int(payload.get("benchmark_warmups", 0) or 0)
+    benchmark_repeats = int(payload.get("benchmark_repeats", 1) or 1)
     env_overrides = payload.get("env_overrides", {})
     run_env_overrides = {k: v for k, v in env_overrides.items() if str(v).strip()}
 
     os.environ["MLXQ_SAVE_PLOTS"] = "1" if save_plots else "0"
+    os.environ["MLXQ_BENCH_WARMUPS"] = str(max(0, benchmark_warmups))
+    os.environ["MLXQ_BENCH_REPEATS"] = str(max(1, benchmark_repeats))
     exit_code = 0
 
     try:
@@ -232,6 +236,8 @@ def run_job(payload: Dict[str, Any]) -> int:
         env_for_run: Dict[str, Optional[str]] = {
             **run_env_overrides,
             "MLXQ_BACKEND": backend or None,
+            "MLXQ_BENCH_WARMUPS": str(max(0, benchmark_warmups)),
+            "MLXQ_BENCH_REPEATS": str(max(1, benchmark_repeats)),
         }
 
         print(f"\n=== Running {name} (qubits={qubits_spec}, backend={backend}) ===")

@@ -1,15 +1,15 @@
 <div align="center">
-  <img src="quantumstudio/assets/app_icon_source.png" alt="osxQ Logo" width="220"/>
-  <h1>osxQ / QuantumStudio</h1>
+  <img src="quantumstudio/assets/app_icon_source.png" alt="Qupertino Logo" width="220"/>
+  <h1>Qupertino / QuantumStudio</h1>
   <p><b>Apple Silicon quantum benchmarking stack</b> with a local simulator, reproducible benchmark pipelines, and a desktop UI.</p>
 </div>
 
 ![QuantumStudio Dashboard](quantumstudio/assets/screenshots/screen003.png)
 
-osxQuantum is a three-part project: a self-published technical report, the osxQ simulator stack, and the dedicated QuantumStudio desktop UI studio. There is no native MLX quantum simulator available today, so osxQ provides a local simulator layer for QFT, QAOA, VQE, Hamiltonian workflows, and OpenQASM runs.
+Qupertino is a three-part project: a self-published technical report, the Qupertino simulator stack, and the dedicated QuantumStudio desktop UI studio. There is no native MLX quantum simulator available today, so Qupertino provides a local simulator layer for QFT, QAOA, VQE, Hamiltonian workflows, and OpenQASM runs.
 
-- Website: https://boltzmannentropy.github.io/osxQuantumWEB/
-- Repository: https://github.com/BoltzmannEntropy/osxQ
+- Website: https://boltzmannentropy.github.io/QupertinoWEB/
+- Repository: https://github.com/BoltzmannEntropy/Qupertino
 - Author: **Shlomo Kashani**
 - Technical report: unpublished; PDF and LaTeX source are kept locally and are not distributed in this repository.
 
@@ -20,9 +20,9 @@ osxQuantum is a three-part project: a self-published technical report, the osxQ 
 ```bibtex
 @software{kashani_osxq_2026,
   author       = {Shlomo Kashani},
-  title        = {osxQ / QuantumStudio: Apple Silicon Quantum Benchmarking Stack},
+  title        = {Qupertino / QuantumStudio: Apple Silicon Quantum Benchmarking Stack},
   year         = {2026},
-  url          = {https://github.com/BoltzmannEntropy/osxQ},
+  url          = {https://github.com/BoltzmannEntropy/Qupertino},
   note         = {GitHub repository}
 }
 ```
@@ -32,26 +32,26 @@ osxQuantum is a three-part project: a self-published technical report, the osxQ 
 ```bibtex
 @techreport{kashani_mlxq_2026,
   author       = {Shlomo Kashani},
-  title        = {mlxQ: Unified Memory Quantum Simulation on Apple Silicon via the MLX Framework},
+  title        = {Qupertino: Structured-Gate Kernel Dispatch for Quantum Circuit Simulation on Apple Silicon with MLX},
   year         = {2026},
   institution  = {Self-published technical report (unpublished)},
-  url          = {https://github.com/BoltzmannEntropy/osxQ}
+  url          = {https://github.com/BoltzmannEntropy/Qupertino}
 }
 ```
 
 ## Extended Introduction
 
-osxQ exists to make Apple Silicon quantum benchmarking practical, local-first, and reproducible. The project packages three layers into one workflow:
+Qupertino exists to make Apple Silicon quantum benchmarking practical, local-first, and reproducible. The project packages three layers into one workflow:
 
 1. **Research layer**: benchmark methodology and framing (see the included technical report).
 2. **Simulator layer (`mlxq`)**: state-vector and MPS backends on MLX for Apple Silicon.
 3. **Product layer (`QuantumStudio`)**: desktop run orchestration, monitoring, and export.
 
-The core motivation is straightforward: Apple Silicon uses a unified memory model, but there is no default native MLX quantum runtime shipped as a platform quantum simulator. osxQ fills that gap with a local simulator stack and benchmark harnesses for QFT, QAOA, VQE, QCBM, Grover, Hamiltonian/time-evolution workflows, and OpenQASM runs.
+The core motivation is straightforward: Apple Silicon uses a unified memory model, but there is no default native MLX quantum runtime shipped as a platform quantum simulator. Qupertino fills that gap with a local simulator stack and benchmark harnesses for QFT, QAOA, VQE, QCBM, Grover, Hamiltonian/time-evolution workflows, and OpenQASM runs.
 
 This repository is designed for publication-grade reproducibility:
 - deterministic CLI run paths
-- structured CSV/JSON output
+- structured CSV/JSON output, raw timing distributions, and run manifests
 - frozen artifact promotion under `assets/benchmarks-frozen/`
 - UI+CLI parity for auditability
 
@@ -67,14 +67,54 @@ This repository is designed for publication-grade reproducibility:
 
 ## Benchmark Context And Representative Results
 
-Representative scaling points (Apple Silicon, report-aligned methodology):
+Qupertino ships **two measured performance tiers**. The pure-MLX tier dispatches structured gate classes to specialized MLX kernels (diagonal gates as broadcast phase multiplies, controlled gates as masked half-state updates, SWAP as an axis permutation, runtime fusion of equal-angle ZZ Trotter layers). The **Metal shader tier** (`MLXQ_METAL_KERNELS=1`) adds hand-written kernels in `src/mlxq/shaders/` for every structured layer family, reached through semantics-preserving fusion detectors and parity-tested against the pure path (251 tests).
 
-- QFT @ 25q: ~7s scale
-- QAOA @ 25q: ~11s scale
-- Hamiltonian simulation @ 25q: ~40s scale
-- Grover @ 25q: high-growth runtime regime
+Four-way interleaved campaign on M1 Max (two warmups, ten measured repeats per cell, all four backends round-robin inside every repeat, gate-identical circuits, mean seconds at 25q):
 
-Use this repository’s frozen assets and run logs as the source of truth for exact run-by-run values.
+| Workload @ 25q | Qupertino Metal | Qupertino MLX | Aer CPU | PennyLane lightning |
+| --- | ---: | ---: | ---: | ---: |
+| QFT | **0.059** | 0.72 | 2.80 | 5.61 |
+| Ring-QAOA (6 layers) | **0.150** | 2.07 | 5.35 | 6.84 |
+| TFIM Trotter (20 steps) | **0.495** | 5.82 | 17.79 | 32.95 |
+| Phase estimation | **0.105** | 0.91 | 4.05 | 6.06 |
+| Grover proxy | **0.052** | 1.11 | 1.21 | 2.73 |
+| GHZ | **0.022** | 0.27 | 0.69 | 0.42 |
+
+The Metal tier is **fastest in all 18 comparison cells** (15/20/25 qubits), with 25-qubit paired per-repeat ratios of **23–47× over Aer** and **19–95× over PennyLane** — and its gate-stream QFT (59 ms) beats MLX's own `mx.fft` primitive (77 ms). The pure-MLX tier is fastest among the CPU-comparable trio on 4 of 6 workloads at 25q (Grover is a statistical tie with Aer; small gate-sparse circuits at 15q favor the CPU baselines). A paired ablation with dispatch disabled (`MLXQ_DENSE_ONLY=1`) attributes **25–33×** to kernel specialization itself. A separate campaign against PennyLane's OpenMP-parallel `lightning.kokkos` reached the same verdict for the pure tier (fastest in 16/18 cells). Full protocol, t-based CIs, raw artifacts: `paper/tqc-acm-2026/evidence_artifacts/`.
+
+### The Metal shader tier
+
+Seven kernel families in one folder (`src/mlxq/shaders/`, design + measurements + codex-review record in its [README](src/mlxq/shaders/README.md)): phase-LUT diagonal layers (ZZ, CZ/CPHASE, grouped weighted couplings), GF(2) affine permutation gathers (any CNOT/X/SWAP run = one pass), fused tensor-product single-qubit layers (uniform and per-qubit-varying, with algebraic window collapse — Grover's H·H·X prologue becomes a single bit-flip gather), radix-4 QFT and Walsh–Hadamard butterflies, basis-conjugated XX/YY Trotter layers, and gate-stream QFT/iQFT stage detectors. Kernel-level at 25q:
+
+| Layer @ 25q | Per-gate | MLX fused | Metal kernel |
+| --- | ---: | ---: | ---: |
+| ZZ Trotter layer (24 bonds) | 35.9 ms | 2.5 ms | **1.7 ms** |
+| Full QFT (radix-4, 13 launches) | 748 ms | 255 ms | **21.1 ms** |
+| RX layer (all 25 qubits) | 194 ms | — | **20.9 ms** |
+| H layer (Walsh radix-4, 7 launches) | 698 ms | — | **12.7 ms** |
+
+The shader tier also engages on the **OpenQASM import path**: the full local QASM corpus (40 executed circuits, QASMBench-derived) matches the pure path to ≤5e-7 everywhere, with structured circuits accelerating (ghz_state_n23 9.1×, cat_state_n22 8.0×, ising_n26 2.2×) and pre-decomposed cx+rz circuits (e.g. QASMBench qft_n18) correctly falling through to the pure path at parity — recognizing decomposed 2-qubit blocks is noted future work. Artifact: `paper/tqc-acm-2026/evidence_artifacts/qasm_shader_sweep_20260704/`.
+
+Full-suite paired sweep (29 workloads at 25q, pure vs Metal alternating within every repeat): **26 of 29 workloads accelerate, 4.7–25×** for those with fusable layer structure (TFIM 2nd order 25×, long-range Ising 24×, Heisenberg 13.8×, variational 14.3×, QCBM 12×, Grover 11.5×). The three 1.0× rows are structural and documented (cross-family Trotter interleave, isolated CZs, strict RY/CNOT alternation). Four Codex CLI review rounds shaped and audited the kernels (archived under `paper/tqc-acm-2026/reviews_shaders_v2/`), catching real bugs: a wrong radix-4 derivation (retracted by the reviewer itself), a float32/rtol hole that silently dropped small-angle gates, and 1.25e-5 phase drift in 300-term products (fixed with grouped double-precision LUTs).
+
+### Full-suite refresh (all 21 benchmark families, `bench.sh --repro`)
+
+The complete batch (one warmup, five measured repeats per qubit point, run `bench/runs/run_20260702_131646`, summaries frozen under `paper/quantics-lncs-2026/evidence_artifacts/full_suite_20260702/`) confirms the kernel rewrite across every family. Gains vs the archived pre-rewrite snapshot at 25 qubits:
+
+| Family | Archived | Current | Gain |
+| --- | ---: | ---: | ---: |
+| Grover | 113.3 s | 1.74 s | 65× |
+| Random circuit | 22.4 s | 1.80 s | 12× |
+| QCBM (9 layers) | 26.3 s | 2.35 s | 11× |
+| QFT | 7.03 s | 0.82 s | 8.5× |
+| Time evolution | 30.1 s | 3.93 s | 7.7× |
+| Variational circuit | 19.2 s | 3.29 s | 5.8× |
+| GHZ | 0.89 s | 0.16 s | 5.7× |
+| QAOA (ring) | 11.1 s | 2.70 s | 4.1× |
+
+New coverage: the Heisenberg/XXZ/random-field/long-range/ladder evolution variants run in 18–33 s at 25q (three Pauli-pair sweeps per Trotter step). Known remaining slow path: the density-matrix `steady_state` diagnostic (~292 s at its 12-qubit cap) still uses the generic dense path.
+
+Current benchmark runners prefer the project-local `.runtime-venv/bin/python` when it exists, then `.venv/bin/python`, then PATH `python3`. Set `PYTHON_BIN=/path/to/python` only when you intentionally want to override that default.
 
 ## Installation (Full)
 
@@ -137,6 +177,14 @@ PYTHON_BIN=/Users/sol/.pyenv/shims/python3 ./bench_with_logging.sh --frozen-pari
 ```bash
 PYTHON_BIN=/Users/sol/.pyenv/shims/python3 ./bench.sh --circuit variational_circuit --simulate-limit 12 --qubits 1,2,5,7,10,11,12
 ```
+
+### Reproducible timing run
+
+```bash
+./bench.sh --circuit ghz --simulate-limit 2 --qubits 2 --no-save-plots --warmups 1 --repeats 2
+```
+
+Each benchmark run writes the legacy plotting files plus `*_raw_runs.csv`, `*_raw_runs.json`, `*_timing_summary.csv`, and `run_manifest.json`. QuantumStudio exposes the same warmup and repeat controls under Advanced Options.
 
 ## Benchmark Catalog (Detailed)
 
@@ -302,7 +350,7 @@ The benchmark engine accepts the following circuit keys. For each benchmark belo
 
 ## Example & Circuit Gallery
 
-osxQ ships a broad gallery of runnable examples: **21 parameterized benchmark families** (any qubit count) plus a **42-circuit OpenQASM corpus** under `datasets/qasm/local/`. Run any benchmark family with `./bench.sh --circuit <key>`; run any QASM circuit through the QASM suite. The full gallery is also published on the [website](https://boltzmannentropy.github.io/osxQuantumWEB/#gallery).
+Qupertino ships a broad gallery of runnable examples: **21 parameterized benchmark families** (any qubit count) plus a **42-circuit OpenQASM corpus** under `datasets/qasm/local/`. Run any benchmark family with `./bench.sh --circuit <key>`; run any QASM circuit through the QASM suite. The full gallery is also published on the [website](https://boltzmannentropy.github.io/QupertinoWEB/#gallery).
 
 ### A. Parameterized benchmark families (`--circuit <key>`)
 
@@ -329,11 +377,11 @@ Run a QASM circuit:
 
 ## Full Example Catalog (250+)
 
-Beyond the circuit gallery above, osxQ ships **250 runnable example functions** — gate-algebra
+Beyond the circuit gallery above, Qupertino ships **250 runnable example functions** — gate-algebra
 identities, state preparation, algorithm demonstrations (Bell, GHZ, QFT, Grover, Toffoli,
 teleportation, QPE), MPS tensor-network parity, OpenQASM execution, and the QuantumStudio
 backend/MCP API. The complete itemized list is published on the
-[Examples & Catalog page](https://boltzmannentropy.github.io/osxQuantumWEB/examples.html).
+[Examples & Catalog page](https://boltzmannentropy.github.io/QupertinoWEB/examples.html).
 
 | Category | Count | Source |
 | --- | ---: | --- |
@@ -343,9 +391,9 @@ backend/MCP API. The complete itemized list is published on the
 | MPS tensor-network backend | 12 | `src/tests/mlxQMpsBackendTest.py`, `mlxQMpsParamSuiteTest.py` |
 | QML wrapper | 5 | `src/tests/mlxQQmlWrapperTest.py` |
 | QPE energy estimation | 2 | `src/tests/mlxQQpeEnergyEstimationTest.py` |
-| Benchmark catalog & visualization | 3 | `src/tests/mlxQBenchCatalogTest.py`, `mlxQVisualizationPlotsTest.py` |
+| Benchmark catalog, protocol & visualization | 4 | `src/tests/mlxQBenchCatalogTest.py`, `mlxQBenchmarkProtocolTest.py`, `mlxQVisualizationPlotsTest.py` |
 | QuantumStudio backend API & MCP server | 17 | `quantumstudio/tests/test_backend_api.py`, `test_mcp_server.py` |
-| **Total** | **250** | |
+| **Total** | **251** | |
 
 Run them all with `./test.sh`, or one module with `python3 -m pytest <file> -q`.
 
@@ -448,9 +496,9 @@ Build UI artifacts:
 
 ## Licensing
 
-osxQ / QuantumStudio is free and open source under the **MIT License** (see [`LICENSE`](LICENSE)). The source code and the compiled macOS binaries are both covered by the same MIT terms — use, modify, and redistribute freely, including for commercial purposes. No purchase or license key is required.
+Qupertino / QuantumStudio is free and open source under the **MIT License** (see [`LICENSE`](LICENSE)). The source code and the compiled macOS binaries are both covered by the same MIT terms — use, modify, and redistribute freely, including for commercial purposes. No purchase or license key is required.
 
 ## Notes
 
 - This repo is local-first by design: benchmark execution and artifacts remain on-device.
-- For web-facing product copy, see `https://boltzmannentropy.github.io/osxQuantumWEB/`.
+- For web-facing product copy, see `https://boltzmannentropy.github.io/QupertinoWEB/`.

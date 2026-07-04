@@ -1,6 +1,12 @@
 import os
 import json
+import csv
 import time
+import sys
+import statistics
+from datetime import datetime, timezone
+from importlib import metadata as importlib_metadata
+from importlib import util as importlib_util
 from typing import List, Dict, Any, Tuple
 
 import math
@@ -59,6 +65,200 @@ def _estimate_depth(n_qubits: int, ops: List[Dict[str, Any]]) -> int:
 from pathlib import Path
 import platform
 import subprocess
+
+
+def _repo_root() -> Path:
+    return Path(__file__).resolve().parents[2]
+
+
+def _env_repro_int(primary: str, fallback: str, default: int) -> int:
+    for name in (primary, fallback):
+        try:
+            val = os.environ.get(name)
+            if val is not None and val != "":
+                return max(0, int(val))
+        except Exception:
+            pass
+    return default
+
+
+def _sync_mlx() -> Dict[str, Any]:
+    """Best-effort synchronization before ending a benchmark timing window."""
+    info_out: Dict[str, Any] = {"mx_eval_scalar": False, "metal_synchronize": False}
+    try:
+        mx.eval(mx.array([0.0]))
+        info_out["mx_eval_scalar"] = True
+    except Exception as exc:
+        info_out["mx_eval_error"] = str(exc)
+    try:
+        metal = getattr(mx, "metal", None)
+        sync = getattr(metal, "synchronize", None) if metal is not None else None
+        if callable(sync):
+            sync()
+            info_out["metal_synchronize"] = True
+    except Exception as exc:
+        info_out["metal_synchronize_error"] = str(exc)
+    return info_out
+
+
+def _force_state(dev) -> None:
+    """Force full evaluation of the simulator state on device.
+
+    Uses probabilities_array() (device-side |amp|^2, no host materialization)
+    when available; falls back to probabilities() for backends without it.
+    The old path converted the full vector to a Python list inside the timing
+    window (~1.5 s at 25 qubits), which is measurement artifact, not simulation.
+    """
+    sim = dev.sim
+    fn = getattr(sim, "probabilities_array", None)
+    if fn is not None:
+        mx.eval(fn())
+    else:
+        sim.probabilities()
+
+
+def _package_version(name: str) -> str:
+    try:
+        return importlib_metadata.version(name)
+    except Exception:
+        return "unavailable"
+
+
+def _git_value(args: List[str]) -> str:
+    try:
+        out = subprocess.check_output(["git", "-C", str(_repo_root()), *args], stderr=subprocess.DEVNULL)
+        return out.decode("utf-8", "ignore").strip()
+    except Exception:
+        return "unavailable"
+
+
+def _baseline_availability() -> Dict[str, Any]:
+    modules = {
+        "pennylane": "PennyLane Python package",
+        "qiskit": "Qiskit Python package",
+        "qulacs": "Qulacs Python package",
+        "cupy": "CuPy Python package",
+        "cuquantum": "cuQuantum Python package",
+    }
+    out: Dict[str, Any] = {}
+    for name, desc in modules.items():
+        out[name] = {
+            "description": desc,
+            "available": importlib_util.find_spec(name) is not None,
+        }
+    out["custatevec_tool"] = {
+        "description": "Repository helper for CUDA/cuStateVec comparison runs",
+        "available": (_repo_root() / "tools" / "custatevec_bench.py").exists(),
+        "path": "tools/custatevec_bench.py",
+        "note": "Requires a CUDA/cuQuantum host; it is not an Apple Silicon co-located baseline.",
+    }
+    return out
+
+
+def _run_manifest() -> Dict[str, Any]:
+    env_prefixes = ("MLXQ_", "QASM_")
+    env = {k: os.environ[k] for k in sorted(os.environ) if k.startswith(env_prefixes)}
+    try:
+        default_device = str(mx.default_device())
+    except Exception:
+        default_device = "unavailable"
+    try:
+        mlx_metal = getattr(mx, "metal", None)
+        metal_available = bool(getattr(mlx_metal, "is_available", lambda: False)()) if mlx_metal is not None else False
+    except Exception:
+        metal_available = False
+    return {
+        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+        "repo_root": str(_repo_root()),
+        "git_commit": _git_value(["rev-parse", "HEAD"]),
+        "git_branch": _git_value(["branch", "--show-current"]),
+        "python": {
+            "executable": sys.executable,
+            "version": sys.version,
+        },
+        "platform": {
+            "system": platform.system(),
+            "release": platform.release(),
+            "version": platform.version(),
+            "machine": platform.machine(),
+            "processor": platform.processor(),
+            "platform": platform.platform(),
+            "mac_ver": platform.mac_ver()[0],
+        },
+        "packages": {
+            "mlx": _package_version("mlx"),
+            "numpy": _package_version("numpy"),
+            "rich": _package_version("rich"),
+        },
+        "mlx": {
+            "default_device": default_device,
+            "metal_available": metal_available,
+        },
+        "benchmark_protocol": {
+            "clock": "time.perf_counter via mlxq.metrics.now_ms",
+            "timing_window": "inside each simulate_* function, after circuit construction and before final forced evaluation",
+            "synchronization": "device-side mx.eval of |amplitude|^2 (probabilities_array) plus best-effort mx.eval scalar and mx.metal.synchronize when available",
+            "summary_statistic": "mean wall-clock milliseconds over measured repeats",
+            "raw_distribution_files": [
+                "<benchmark>_raw_runs.csv",
+                "<benchmark>_raw_runs.json",
+                "<benchmark>_timing_summary.csv",
+            ],
+        },
+        "external_baseline_availability": _baseline_availability(),
+        "environment": env,
+    }
+
+
+def _write_manifest(out_prefix: str) -> Dict[str, Any]:
+    manifest = _run_manifest()
+    try:
+        out = Path(out_prefix)
+        out.mkdir(parents=True, exist_ok=True)
+        with open(out / "run_manifest.json", "w") as f:
+            json.dump(manifest, f, indent=2)
+    except Exception as exc:
+        warn(f"manifest write skipped: {exc}")
+    return manifest
+
+
+def _stats(values: List[float]) -> Dict[str, float]:
+    if not values:
+        return {
+            "mean": 0.0, "median": 0.0, "stdev": 0.0, "stderr": 0.0,
+            "ci95": 0.0, "min": 0.0, "max": 0.0,
+        }
+    mean = float(statistics.mean(values))
+    median = float(statistics.median(values))
+    stdev = float(statistics.stdev(values)) if len(values) > 1 else 0.0
+    stderr = stdev / math.sqrt(float(len(values))) if len(values) > 1 else 0.0
+    return {
+        "mean": mean,
+        "median": median,
+        "stdev": stdev,
+        "stderr": stderr,
+        "ci95": 1.96 * stderr,
+        "min": float(min(values)),
+        "max": float(max(values)),
+    }
+
+
+def _aggregate_repeats(runs: List[Dict[str, Any]], fallback: Dict[str, Any]) -> Dict[str, Any]:
+    wall_stats = _stats([float(r.get("wall_ms", 0.0)) for r in runs])
+    cpu_stats = _stats([float(r.get("cpu_s", 0.0)) for r in runs])
+    mem_stats = _stats([float(r.get("delta_mb", 0.0)) for r in runs])
+    out = dict(fallback)
+    out["wall_ms"] = wall_stats["mean"]
+    out["cpu_s"] = cpu_stats["mean"]
+    out["delta_mb"] = mem_stats["max"]
+    out["timing"] = {
+        "repeats": len(runs),
+        "wall_ms": wall_stats,
+        "cpu_s": cpu_stats,
+        "delta_mb": mem_stats,
+        "raw_wall_ms": [float(r.get("wall_ms", 0.0)) for r in runs],
+    }
+    return out
 
 
 def _detect_hardware_info() -> tuple[str, str]:
@@ -216,7 +416,7 @@ def run_qasm_suite(qasm_dir: str = "datasets/qasm/local",
                 if mem_cap_mb and (peak_rss_mb() - m0) > float(mem_cap_mb):
                     status = "memcap"; break
             if status == "ok":
-                _ = dev.sim.probabilities()  # force eval
+                _force_state(dev)  # force eval
         except Exception as e:
             err = str(e)
             status = "unsupported" if "Unsupported" in err else "error"
@@ -317,6 +517,7 @@ if __name__ == "__main__":
 # ---------------------------------------------------------------------------
 
 def _bench_result(name: str, qubits: int, gates: int, t0: float, c0: float, m0: float) -> Dict[str, Any]:
+    sync_info = _sync_mlx()
     return {
         "name": name,
         "qubits": qubits,
@@ -324,6 +525,7 @@ def _bench_result(name: str, qubits: int, gates: int, t0: float, c0: float, m0: 
         "wall_ms": now_ms() - t0,
         "cpu_s": cpu_seconds() - c0,
         "delta_mb": max(0.0, peak_rss_mb() - m0),
+        "sync": sync_info,
     }
 
 
@@ -340,7 +542,7 @@ def bench_gate_suite(reps: int = 1000) -> Dict[str, Any]:
                 dev.execute([{"name": name, "wires": [0], "parameters": [0.3 if name=="RX" else -0.7]}])
             else:
                 dev.execute([{"name": name, "wires": [0]}])
-        _ = dev.sim.probabilities()
+        _force_state(dev)
         r = _bench_result(name, 1, reps, t0, c0, m0)
         rows.append((name, str(r["qubits"]), str(r["gates"]), f"{r['wall_ms']:.2f}", f"{r['cpu_s']:.2f}", f"{r['delta_mb']:.2f}"))
         suite.append(r)
@@ -348,14 +550,14 @@ def bench_gate_suite(reps: int = 1000) -> Dict[str, Any]:
     dev2 = Device(2); t0,c0,m0 = now_ms(), cpu_seconds(), peak_rss_mb()
     for _ in range(reps):
         dev2.execute([{"name": "CNOT", "wires": [0,1]}])
-    _ = dev2.sim.probabilities()
+    _force_state(dev2)
     r = _bench_result("CNOT", 2, reps, t0, c0, m0)
     rows.append(("CNOT", "2", str(reps), f"{r['wall_ms']:.2f}", f"{r['cpu_s']:.2f}", f"{r['delta_mb']:.2f}")); suite.append(r)
 
     dev3 = Device(3); t0,c0,m0 = now_ms(), cpu_seconds(), peak_rss_mb()
     for _ in range(reps):
         dev3.execute([{"name": "CCX", "wires": [0,1,2]}])
-    _ = dev3.sim.probabilities()
+    _force_state(dev3)
     r = _bench_result("Toffoli", 3, reps, t0, c0, m0)
     rows.append(("Toffoli", "3", str(reps), f"{r['wall_ms']:.2f}", f"{r['cpu_s']:.2f}", f"{r['delta_mb']:.2f}")); suite.append(r)
 
@@ -373,8 +575,30 @@ def simulate_qft(n: int) -> Dict[str, Any]:
             ops.append({"name": "CPHASE", "wires": [k, j], "parameters": [phi]})
     t0,c0,m0 = now_ms(), cpu_seconds(), peak_rss_mb()
     dev.execute(ops)
-    _ = dev.sim.probabilities()
+    _force_state(dev)
     return _bench_result("qft", n, len(ops), t0, c0, m0)
+
+
+def simulate_qft_fft_primitive(n: int) -> Dict[str, Any]:
+    """QFT as an algorithmic primitive via mx.fft (NOT gate-by-gate circuit execution).
+
+    Reported as a separately-labeled row: comparable only to libraries exposing
+    a native QFT/FFT operation, not to circuit-simulation timings. The
+    bit-reversal index table is built outside the timing window, mirroring how
+    circuit construction is excluded for the gate benchmarks.
+    """
+    from .sim import qft_fft, _bit_reversal_indices, fft_supported
+    dev = Device(n)
+    if not hasattr(dev.sim, "state"):
+        return {"error": "sv backend required", "name": "qft_fft_primitive", "qubits": n}
+    if not fft_supported(n):
+        return {"error": f"mx.fft kernel unavailable for 2^{n}", "name": "qft_fft_primitive", "qubits": n}
+    idx = _bit_reversal_indices(n)
+    mx.eval(idx)
+    t0, c0, m0 = now_ms(), cpu_seconds(), peak_rss_mb()
+    qft_fft(dev.sim)
+    _force_state(dev)
+    return _bench_result("qft_fft_primitive", n, 1, t0, c0, m0)
 
 
 def simulate_phase_estimation(n: int) -> Dict[str, Any]:
@@ -398,7 +622,7 @@ def simulate_phase_estimation(n: int) -> Dict[str, Any]:
         ops.append({"name": "H", "wires": [j]})
     t0,c0,m0 = now_ms(), cpu_seconds(), peak_rss_mb()
     dev.execute(ops)
-    _ = dev.sim.probabilities()
+    _force_state(dev)
     return _bench_result("phase_estimation", n, len(ops), t0, c0, m0)
 
 
@@ -416,7 +640,7 @@ def simulate_variational(n: int, layers: int = 4) -> Dict[str, Any]:
             ops.append({"name": "CNOT", "wires": [q, q+1]})
     t0,c0,m0 = now_ms(), cpu_seconds(), peak_rss_mb()
     dev.execute(ops)
-    _ = dev.sim.probabilities()
+    _force_state(dev)
     return _bench_result("variational_circuit", n, len(ops), t0, c0, m0)
 
 
@@ -434,7 +658,7 @@ def simulate_qcbm(n: int, layers: int = 4) -> Dict[str, Any]:
             ops.append({"name": "CNOT", "wires": [n-1, 0]})
     t0,c0,m0 = now_ms(), cpu_seconds(), peak_rss_mb()
     dev.execute(ops)
-    _ = dev.sim.probabilities()
+    _force_state(dev)
     return _bench_result("qcbm", n, len(ops), t0, c0, m0)
 
 
@@ -452,7 +676,7 @@ def simulate_random_circuit(n: int, depth: int = 6, seed: int = 42) -> Dict[str,
             ops.append({"name": "CNOT", "wires": [q, q+1]})
     t0,c0,m0 = now_ms(), cpu_seconds(), peak_rss_mb()
     dev.execute(ops)
-    _ = dev.sim.probabilities()
+    _force_state(dev)
     return _bench_result("random_circuit", n, len(ops), t0, c0, m0)
 
 
@@ -467,7 +691,7 @@ def simulate_qaoa(n: int, layers: int = 6) -> Dict[str, Any]:
             ops.append({"name": "RX", "wires": [0], "parameters": [2.0*beta]})
         t0,c0,m0 = now_ms(), cpu_seconds(), peak_rss_mb()
         dev.execute(ops)
-        _ = dev.sim.probabilities()
+        _force_state(dev)
         return _bench_result("qaoa", n, len(ops), t0, c0, m0)
     for l in range(layers):
         gamma = 0.6 + 0.1*l
@@ -479,7 +703,7 @@ def simulate_qaoa(n: int, layers: int = 6) -> Dict[str, Any]:
             ops.append({"name": "RX", "wires": [q], "parameters": [2.0*beta]})
     t0,c0,m0 = now_ms(), cpu_seconds(), peak_rss_mb()
     dev.execute(ops)
-    _ = dev.sim.probabilities()
+    _force_state(dev)
     return _bench_result("qaoa", n, len(ops), t0, c0, m0)
 
 
@@ -505,7 +729,7 @@ def simulate_cuquantum_blueqat(n: int, depth: int = 12) -> Dict[str, Any]:
             ops.append({"name": "CNOT", "wires": [i, i + 1]})
     t0, c0, m0 = now_ms(), cpu_seconds(), peak_rss_mb()
     dev.execute(ops)
-    _ = dev.sim.probabilities()
+    _force_state(dev)
     return _bench_result("cuquantum_blueqat", n, len(ops), t0, c0, m0)
 
 
@@ -530,7 +754,7 @@ def simulate_grover(n: int, iterations: int = 1) -> Dict[str, Any]:
             ops.append({"name": "H", "wires": [q]})
     t0, c0, m0 = now_ms(), cpu_seconds(), peak_rss_mb()
     dev.execute(ops)
-    _ = dev.sim.probabilities()
+    _force_state(dev)
     return _bench_result("grover", n, len(ops), t0, c0, m0)
 
 
@@ -541,7 +765,7 @@ def simulate_ghz(n: int) -> Dict[str, Any]:
         ops.append({"name": "CNOT", "wires": [q, q+1]})
     t0,c0,m0 = now_ms(), cpu_seconds(), peak_rss_mb()
     dev.execute(ops)
-    _ = dev.sim.probabilities()
+    _force_state(dev)
     return _bench_result("ghz", n, len(ops), t0, c0, m0)
 
 
@@ -619,7 +843,7 @@ def simulate_hamiltonian(n: int, trotter_steps: int = 20, time_total: float = 1.
             if stop_on_trunc and bool(getattr(sim, 'truncated', lambda: False)()):
                 stopped_on_trunc = True
                 break
-        _ = dev.sim.probabilities()
+        _force_state(dev)
         res = _bench_result("hamiltonian_simulation", n, trotter_steps*((n-1)+n), t0, c0, m0)
         # Attach MPS diagnostics when available
         try:
@@ -641,16 +865,14 @@ def simulate_hamiltonian(n: int, trotter_steps: int = 20, time_total: float = 1.
     ops = []
     for _ in range(trotter_steps):
         for i in range(n-1):
-            ops.append({"name": "CUSTOM2", "wires": [i, i+1], "matrix": _zz_phase_gate(-dt*J)})
+            ops.append({"name": "ZZPHASE", "wires": [i, i+1], "parameters": [-dt*J]})
         for q in range(n):
             ops.append({"name": "RX", "wires": [q], "parameters": [2.0*h*dt]})
     t0,c0,m0 = now_ms(), cpu_seconds(), peak_rss_mb()
-    for op in ops:
-        if op.get("name") == "CUSTOM2":
-            dev.sim.apply_two(op["matrix"], op["wires"][0], op["wires"][1])
-        else:
-            dev.execute([op])
-    _ = dev.sim.probabilities()
+    # Single execute call so the device's runtime ZZ-layer fusion can batch
+    # consecutive commuting ZZPHASE ops (no CUSTOM2 matrix ops remain).
+    dev.execute(ops)
+    _force_state(dev)
     return _bench_result("hamiltonian_simulation", n, len(ops), t0, c0, m0)
 
 def simulate_heisenberg(n: int, J: float = 1.0, trotter_steps: int = 20, time_total: float = 1.0) -> Dict[str, Any]:
@@ -698,7 +920,7 @@ def simulate_heisenberg(n: int, J: float = 1.0, trotter_steps: int = 20, time_to
             if stop_on_trunc and bool(getattr(sim, 'truncated', lambda: False)()):
                 stopped_on_trunc = True
                 break
-        _ = dev.sim.probabilities()
+        _force_state(dev)
         gates = steps_done * 3 * max(0, n - 1)
         res = _bench_result("heisenberg", n, gates, t0, c0, m0)
         try:
@@ -719,18 +941,16 @@ def simulate_heisenberg(n: int, J: float = 1.0, trotter_steps: int = 20, time_to
     ops = []
     for _ in range(trotter_steps):
         for i in range(n-1):
-            ops.append({"name": "CUSTOM2", "wires": [i, i+1], "matrix": _xx_phase_gate(-dt*J)})
+            ops.append({"name": "XXPHASE", "wires": [i, i+1], "parameters": [-dt*J]})
         for i in range(n-1):
-            ops.append({"name": "CUSTOM2", "wires": [i, i+1], "matrix": _yy_phase_gate(-dt*J)})
+            ops.append({"name": "YYPHASE", "wires": [i, i+1], "parameters": [-dt*J]})
         for i in range(n-1):
-            ops.append({"name": "CUSTOM2", "wires": [i, i+1], "matrix": _zz_phase_gate(-dt*J)})
+            ops.append({"name": "ZZPHASE", "wires": [i, i+1], "parameters": [-dt*J]})
     t0,c0,m0 = now_ms(), cpu_seconds(), peak_rss_mb()
-    for op in ops:
-        if op.get("name") == "CUSTOM2":
-            dev.sim.apply_two(op["matrix"], op["wires"][0], op["wires"][1])
-        else:
-            dev.execute([op])
-    _ = dev.sim.probabilities()
+    # Single execute call so the device's runtime ZZ-layer fusion can batch
+    # consecutive commuting ZZPHASE ops (no CUSTOM2 matrix ops remain).
+    dev.execute(ops)
+    _force_state(dev)
     return _bench_result("heisenberg", n, len(ops), t0, c0, m0)
 
 def simulate_heisenberg_xxz(n: int, Jx: float = 1.0, Jy: float = 1.0, Jz: float = 1.0,
@@ -782,7 +1002,7 @@ def simulate_heisenberg_xxz(n: int, Jx: float = 1.0, Jy: float = 1.0, Jz: float 
             if stop_on_trunc and bool(getattr(sim, 'truncated', lambda: False)()):
                 stopped_on_trunc = True
                 break
-        _ = dev.sim.probabilities()
+        _force_state(dev)
         k = (1 if Ux is not None else 0) + (1 if Uy is not None else 0) + (1 if Uz is not None else 0)
         gates = steps_done * k * max(0, n - 1)
         res = _bench_result("heisenberg_xxz", n, gates, t0, c0, m0)
@@ -805,20 +1025,18 @@ def simulate_heisenberg_xxz(n: int, Jx: float = 1.0, Jy: float = 1.0, Jz: float 
     for _ in range(trotter_steps):
         if abs(Jx) > 0:
             for i in range(n-1):
-                ops.append({"name": "CUSTOM2", "wires": [i, i+1], "matrix": _xx_phase_gate(-dt*Jx)})
+                ops.append({"name": "XXPHASE", "wires": [i, i+1], "parameters": [-dt*Jx]})
         if abs(Jy) > 0:
             for i in range(n-1):
-                ops.append({"name": "CUSTOM2", "wires": [i, i+1], "matrix": _yy_phase_gate(-dt*Jy)})
+                ops.append({"name": "YYPHASE", "wires": [i, i+1], "parameters": [-dt*Jy]})
         if abs(Jz) > 0:
             for i in range(n-1):
-                ops.append({"name": "CUSTOM2", "wires": [i, i+1], "matrix": _zz_phase_gate(-dt*Jz)})
+                ops.append({"name": "ZZPHASE", "wires": [i, i+1], "parameters": [-dt*Jz]})
     t0,c0,m0 = now_ms(), cpu_seconds(), peak_rss_mb()
-    for op in ops:
-        if op.get("name") == "CUSTOM2":
-            dev.sim.apply_two(op["matrix"], op["wires"][0], op["wires"][1])
-        else:
-            dev.execute([op])
-    _ = dev.sim.probabilities()
+    # Single execute call so the device's runtime ZZ-layer fusion can batch
+    # consecutive commuting ZZPHASE ops (no CUSTOM2 matrix ops remain).
+    dev.execute(ops)
+    _force_state(dev)
     return _bench_result("heisenberg_xxz", n, len(ops), t0, c0, m0)
 
 def simulate_tfim(n: int, J: float = 1.0, h: float = 0.5, trotter_steps: int = 20,
@@ -859,7 +1077,7 @@ def simulate_tfim_trotter2(n: int, J: float = 1.0, h: float = 0.5, trotter_steps
             if stop_on_trunc and bool(getattr(sim, 'truncated', lambda: False)()):
                 stopped_on_trunc = True
                 break
-        _ = dev.sim.probabilities()
+        _force_state(dev)
         gates = steps_done * ((n) + (n-1) + (n))
         res = _bench_result("tfim_trotter2", n, gates, t0, c0, m0)
         try:
@@ -882,16 +1100,14 @@ def simulate_tfim_trotter2(n: int, J: float = 1.0, h: float = 0.5, trotter_steps
         for q in range(n):
             ops.append({"name": "RX", "wires": [q], "parameters": [2.0*h*(dt*0.5)]})
         for i in range(n-1):
-            ops.append({"name": "CUSTOM2", "wires": [i, i+1], "matrix": _zz_phase_gate(-dt*J)})
+            ops.append({"name": "ZZPHASE", "wires": [i, i+1], "parameters": [-dt*J]})
         for q in range(n):
             ops.append({"name": "RX", "wires": [q], "parameters": [2.0*h*(dt*0.5)]})
     t0,c0,m0 = now_ms(), cpu_seconds(), peak_rss_mb()
-    for op in ops:
-        if op.get("name") == "CUSTOM2":
-            dev.sim.apply_two(op["matrix"], op["wires"][0], op["wires"][1])
-        else:
-            dev.execute([op])
-    _ = dev.sim.probabilities()
+    # Single execute call so the device's runtime ZZ-layer fusion can batch
+    # consecutive commuting ZZPHASE ops (no CUSTOM2 matrix ops remain).
+    dev.execute(ops)
+    _force_state(dev)
     return _bench_result("tfim_trotter2", n, len(ops), t0, c0, m0)
 
 def simulate_tfim_random_field(n: int, J: float = 1.0, h_min: float = 0.2, h_max: float = 0.8,
@@ -929,7 +1145,7 @@ def simulate_tfim_random_field(n: int, J: float = 1.0, h_min: float = 0.2, h_max
             if stop_on_trunc and bool(getattr(sim, 'truncated', lambda: False)()):
                 stopped_on_trunc = True
                 break
-        _ = dev.sim.probabilities()
+        _force_state(dev)
         gates = steps_done * ((n-1) + n)
         res = _bench_result("tfim_random_field", n, gates, t0, c0, m0)
         try:
@@ -950,16 +1166,14 @@ def simulate_tfim_random_field(n: int, J: float = 1.0, h_min: float = 0.2, h_max
     ops = []
     for _ in range(trotter_steps):
         for i in range(n-1):
-            ops.append({"name": "CUSTOM2", "wires": [i, i+1], "matrix": _zz_phase_gate(-dt*J)})
+            ops.append({"name": "ZZPHASE", "wires": [i, i+1], "parameters": [-dt*J]})
         for q in range(n):
             ops.append({"name": "RX", "wires": [q], "parameters": [2.0*hs[q]*dt]})
     t0,c0,m0 = now_ms(), cpu_seconds(), peak_rss_mb()
-    for op in ops:
-        if op.get("name") == "CUSTOM2":
-            dev.sim.apply_two(op["matrix"], op["wires"][0], op["wires"][1])
-        else:
-            dev.execute([op])
-    _ = dev.sim.probabilities()
+    # Single execute call so the device's runtime ZZ-layer fusion can batch
+    # consecutive commuting ZZPHASE ops (no CUSTOM2 matrix ops remain).
+    dev.execute(ops)
+    _force_state(dev)
     return _bench_result("tfim_random_field", n, len(ops), t0, c0, m0)
 
 def simulate_heisenberg_random_field(n: int, J: float = 1.0, h_min: float = -0.5, h_max: float = 0.5,
@@ -1000,7 +1214,7 @@ def simulate_heisenberg_random_field(n: int, J: float = 1.0, h_min: float = -0.5
             if stop_on_trunc and bool(getattr(sim, 'truncated', lambda: False)()):
                 stopped_on_trunc = True
                 break
-        _ = dev.sim.probabilities()
+        _force_state(dev)
         gates = steps_done * (3*(n-1) + n)
         res = _bench_result("heisenberg_random_field", n, gates, t0, c0, m0)
         try:
@@ -1020,18 +1234,16 @@ def simulate_heisenberg_random_field(n: int, J: float = 1.0, h_min: float = -0.5
     # Dense path
     ops = []
     for _ in range(trotter_steps):
-        for i in range(n-1): ops.append({"name": "CUSTOM2", "wires": [i, i+1], "matrix": _xx_phase_gate(-dt*J)})
-        for i in range(n-1): ops.append({"name": "CUSTOM2", "wires": [i, i+1], "matrix": _yy_phase_gate(-dt*J)})
-        for i in range(n-1): ops.append({"name": "CUSTOM2", "wires": [i, i+1], "matrix": _zz_phase_gate(-dt*J)})
+        for i in range(n-1): ops.append({"name": "XXPHASE", "wires": [i, i+1], "parameters": [-dt*J]})
+        for i in range(n-1): ops.append({"name": "YYPHASE", "wires": [i, i+1], "parameters": [-dt*J]})
+        for i in range(n-1): ops.append({"name": "ZZPHASE", "wires": [i, i+1], "parameters": [-dt*J]})
         for q in range(n):
             ops.append({"name": "RZ", "wires": [q], "parameters": [2.0*hz[q]*dt]})
     t0,c0,m0 = now_ms(), cpu_seconds(), peak_rss_mb()
-    for op in ops:
-        if op.get("name") == "CUSTOM2":
-            dev.sim.apply_two(op["matrix"], op["wires"][0], op["wires"][1])
-        else:
-            dev.execute([op])
-    _ = dev.sim.probabilities()
+    # Single execute call so the device's runtime ZZ-layer fusion can batch
+    # consecutive commuting ZZPHASE ops (no CUSTOM2 matrix ops remain).
+    dev.execute(ops)
+    _force_state(dev)
     return _bench_result("heisenberg_random_field", n, len(ops), t0, c0, m0)
 
 def simulate_long_range_ising(n: int, J: float = 1.0, alpha: float = 2.0,
@@ -1061,7 +1273,7 @@ def simulate_long_range_ising(n: int, J: float = 1.0, alpha: float = 2.0,
             if stop_on_trunc and bool(getattr(sim, 'truncated', lambda: False)()):
                 stopped_on_trunc = True
                 break
-        _ = dev.sim.probabilities()
+        _force_state(dev)
         pairs = (n * (n - 1)) // 2
         gates = steps_done * pairs
         res = _bench_result("long_range_ising", n, gates, t0, c0, m0)
@@ -1087,14 +1299,12 @@ def simulate_long_range_ising(n: int, J: float = 1.0, alpha: float = 2.0,
             for j in range(i+1, n):
                 dist = float(j - i)
                 Jij = J / (dist ** max(1e-6, alpha))
-                ops.append({"name": "CUSTOM2", "wires": [i, j], "matrix": _zz_phase_gate(-dt*Jij)})
+                ops.append({"name": "ZZPHASE", "wires": [i, j], "parameters": [-dt*Jij]})
     t0,c0,m0 = now_ms(), cpu_seconds(), peak_rss_mb()
-    for op in ops:
-        if op.get("name") == "CUSTOM2":
-            dev.sim.apply_two(op["matrix"], op["wires"][0], op["wires"][1])
-        else:
-            dev.execute([op])
-    _ = dev.sim.probabilities()
+    # Single execute call so the device's runtime ZZ-layer fusion can batch
+    # consecutive commuting ZZPHASE ops (no CUSTOM2 matrix ops remain).
+    dev.execute(ops)
+    _force_state(dev)
     return _bench_result("long_range_ising", n, len(ops), t0, c0, m0)
 
 def simulate_ladder_heisenberg(n: int, J: float = 1.0, Jr: float = 1.0, trotter_steps: int = 12,
@@ -1139,7 +1349,7 @@ def simulate_ladder_heisenberg(n: int, J: float = 1.0, Jr: float = 1.0, trotter_
             if stop_on_trunc and bool(getattr(sim, 'truncated', lambda: False)()):
                 stopped_on_trunc = True
                 break
-        _ = dev.sim.probabilities()
+        _force_state(dev)
         per_step_ops = 3 * (2 * (L - 1) + L)  # XX/YY/ZZ for each leg/rung pair per step
         gates = steps_done * per_step_ops
         res = _bench_result("ladder_heisenberg", n, gates, t0, c0, m0)
@@ -1164,21 +1374,19 @@ def simulate_ladder_heisenberg(n: int, J: float = 1.0, Jr: float = 1.0, trotter_
         for row_offset in (0, L):
             for i in range(L-1):
                 a, b = row_offset + i, row_offset + i + 1
-                ops.append({"name": "CUSTOM2", "wires": [a, b], "matrix": _xx_phase_gate(-dt*J)})
-                ops.append({"name": "CUSTOM2", "wires": [a, b], "matrix": _yy_phase_gate(-dt*J)})
-                ops.append({"name": "CUSTOM2", "wires": [a, b], "matrix": _zz_phase_gate(-dt*J)})
+                ops.append({"name": "XXPHASE", "wires": [a, b], "parameters": [-dt*J]})
+                ops.append({"name": "YYPHASE", "wires": [a, b], "parameters": [-dt*J]})
+                ops.append({"name": "ZZPHASE", "wires": [a, b], "parameters": [-dt*J]})
         for i in range(L):
             a, b = i, i + L
-            ops.append({"name": "CUSTOM2", "wires": [a, b], "matrix": _xx_phase_gate(-dt*Jr)})
-            ops.append({"name": "CUSTOM2", "wires": [a, b], "matrix": _yy_phase_gate(-dt*Jr)})
-            ops.append({"name": "CUSTOM2", "wires": [a, b], "matrix": _zz_phase_gate(-dt*Jr)})
+            ops.append({"name": "XXPHASE", "wires": [a, b], "parameters": [-dt*Jr]})
+            ops.append({"name": "YYPHASE", "wires": [a, b], "parameters": [-dt*Jr]})
+            ops.append({"name": "ZZPHASE", "wires": [a, b], "parameters": [-dt*Jr]})
     t0,c0,m0 = now_ms(), cpu_seconds(), peak_rss_mb()
-    for op in ops:
-        if op.get("name") == "CUSTOM2":
-            dev.sim.apply_two(op["matrix"], op["wires"][0], op["wires"][1])
-        else:
-            dev.execute([op])
-    _ = dev.sim.probabilities()
+    # Single execute call so the device's runtime ZZ-layer fusion can batch
+    # consecutive commuting ZZPHASE ops (no CUSTOM2 matrix ops remain).
+    dev.execute(ops)
+    _force_state(dev)
     return _bench_result("ladder_heisenberg", n, len(ops), t0, c0, m0)
 
 
@@ -1209,6 +1417,8 @@ def _simulate_dispatch(circuit_type: str, n: int):
         return simulate_heisenberg(n)
     if circuit_type == "qft":
         return simulate_qft(n)
+    if circuit_type == "qft_fft_primitive":
+        return simulate_qft_fft_primitive(n)
     if circuit_type == "phase_estimation":
         return simulate_phase_estimation(n)
     if circuit_type == "ghz":
@@ -1296,7 +1506,7 @@ def simulate_deutsch_jozsa(n: int) -> Dict[str, Any]:
         ops.append({"name": "H", "wires": [q]})
     t0,c0,m0 = now_ms(), cpu_seconds(), peak_rss_mb()
     dev.execute(ops)
-    _ = dev.sim.probabilities()
+    _force_state(dev)
     return _bench_result("deutsch_jozsa", n, len(ops), t0, c0, m0)
 
 
@@ -1310,7 +1520,7 @@ def simulate_graph_state(n: int, ring: bool = True) -> Dict[str, Any]:
     if ring and n > 2:
         ops.append({"name": "CZ", "wires": [n-1, 0]})
     t0,c0,m0 = now_ms(), cpu_seconds(), peak_rss_mb()
-    dev.execute(ops); _ = dev.sim.probabilities()
+    dev.execute(ops); _force_state(dev)
     return _bench_result("graph_state", n, len(ops), t0, c0, m0)
 
 
@@ -1328,7 +1538,7 @@ def simulate_qft_entangled(n: int) -> Dict[str, Any]:
             phi = math.pi / (2 ** (k - j))
             ops.append({"name": "CPHASE", "wires": [k, j], "parameters": [phi]})
     t0,c0,m0 = now_ms(), cpu_seconds(), peak_rss_mb()
-    dev.execute(ops); _ = dev.sim.probabilities()
+    dev.execute(ops); _force_state(dev)
     return _bench_result("qft_entangled", n, len(ops), t0, c0, m0)
 
 
@@ -1350,7 +1560,7 @@ def simulate_phase_estimation_inexact(n: int) -> Dict[str, Any]:
     for q in range(n):
         ops.append({"name": "H", "wires": [q]})
     t0,c0,m0 = now_ms(), cpu_seconds(), peak_rss_mb()
-    dev.execute(ops); _ = dev.sim.probabilities()
+    dev.execute(ops); _force_state(dev)
     return _bench_result("phase_estimation_inexact", n, len(ops), t0, c0, m0)
 
 
@@ -1374,7 +1584,7 @@ def simulate_ae(n: int) -> Dict[str, Any]:
         else:
             ops.append({"name": "Z", "wires": [0]})
     t0,c0,m0 = now_ms(), cpu_seconds(), peak_rss_mb()
-    dev.execute(ops); _ = dev.sim.probabilities()
+    dev.execute(ops); _force_state(dev)
     return _bench_result("ae", n, len(ops), t0, c0, m0)
 
 
@@ -1389,7 +1599,7 @@ def simulate_quantum_walk(n: int) -> Dict[str, Any]:
         for q in range(n-1):
             ops.append({"name": "CZ", "wires": [q, q+1]})
     t0,c0,m0 = now_ms(), cpu_seconds(), peak_rss_mb()
-    dev.execute(ops); _ = dev.sim.probabilities()
+    dev.execute(ops); _force_state(dev)
     return _bench_result("quantum_walk", n, len(ops), t0, c0, m0)
 
 
@@ -1405,7 +1615,7 @@ def simulate_quantum_walk_vchain(n: int) -> Dict[str, Any]:
         for i in range(offset, n-1, 2):
             ops.append({"name": "CNOT", "wires": [i, i+1]})
     t0,c0,m0 = now_ms(), cpu_seconds(), peak_rss_mb()
-    dev.execute(ops); _ = dev.sim.probabilities()
+    dev.execute(ops); _force_state(dev)
     return _bench_result("quantum_walk_vchain", n, len(ops), t0, c0, m0)
 
 
@@ -1426,7 +1636,7 @@ def simulate_realamp(n: int) -> Dict[str, Any]:
         for q in range(n - 1):
             ops.append({"name": "CZ", "wires": [q, q + 1]})
     t0, c0, m0 = now_ms(), cpu_seconds(), peak_rss_mb()
-    dev.execute(ops); _ = dev.sim.probabilities()
+    dev.execute(ops); _force_state(dev)
     return _bench_result("realamp", n, len(ops), t0, c0, m0)
 
 
@@ -1446,7 +1656,7 @@ def simulate_su2rand(n: int) -> Dict[str, Any]:
         for i in range(offset, n - 1, 2):
             ops.append({"name": "CZ", "wires": [i, i + 1]})
     t0, c0, m0 = now_ms(), cpu_seconds(), peak_rss_mb()
-    dev.execute(ops); _ = dev.sim.probabilities()
+    dev.execute(ops); _force_state(dev)
     return _bench_result("su2rand", n, len(ops), t0, c0, m0)
 
 
@@ -1459,7 +1669,7 @@ def simulate_qnn(n: int) -> Dict[str, Any]:
     for q in range(n):
         ops.append({"name": "RZ", "wires": [q], "parameters": [phi_base * (q + 1)]})
     for i in range(n - 1):
-        ops.append({"name": "CUSTOM2", "wires": [i, i + 1], "matrix": _zz_phase_gate(0.2)})
+        ops.append({"name": "ZZPHASE", "wires": [i, i + 1], "parameters": [0.2]})
     # Two hardware-efficient layers
     rnd = random.Random(9012 + 5 * n)
     for _ in range(2):
@@ -1469,12 +1679,10 @@ def simulate_qnn(n: int) -> Dict[str, Any]:
             ops.append({"name": "CNOT", "wires": [i, i + 1]})
     t0, c0, m0 = now_ms(), cpu_seconds(), peak_rss_mb()
     # Execute with CUSTOM2 handled via direct two-qubit apply
-    for op in ops:
-        if op.get("name") == "CUSTOM2":
-            dev.sim.apply_two(op["matrix"], op["wires"][0], op["wires"][1])
-        else:
-            dev.execute([op])
-    _ = dev.sim.probabilities()
+    # Single execute call so the device's runtime ZZ-layer fusion can batch
+    # consecutive commuting ZZPHASE ops (no CUSTOM2 matrix ops remain).
+    dev.execute(ops)
+    _force_state(dev)
     return _bench_result("qnn", n, len(ops), t0, c0, m0)
 
 
@@ -1496,7 +1704,7 @@ def simulate_wstate(n: int) -> Dict[str, Any]:
         ops.append({"name": "RY", "wires": [i], "parameters": [theta]})
         ops.append({"name": "CNOT", "wires": [i, i + 1]})
     t0, c0, m0 = now_ms(), cpu_seconds(), peak_rss_mb()
-    dev.execute(ops); _ = dev.sim.probabilities()
+    dev.execute(ops); _force_state(dev)
     return _bench_result("wstate", n, len(ops), t0, c0, m0)
 
 
@@ -1754,6 +1962,44 @@ def run_scaling_benchmark(circuit_type: str, qubits: List[int], simulate_cap: Op
     name_w = max(22, len(circuit_type))
     aborted = False
     use_memray = os.environ.get('MLXQ_MEMRAY', '0') == '1'
+    repeat_count = max(1, _env_repro_int('MLXQ_BENCH_REPEATS', 'MLXQ_REPEATS', 1))
+    warmup_count = _env_repro_int('MLXQ_BENCH_WARMUPS', 'MLXQ_WARMUPS', 0)
+    manifest = _write_manifest(out_prefix)
+    raw_runs: List[Dict[str, Any]] = []
+    timing_summaries: List[Dict[str, Any]] = []
+    if repeat_count > 1 or warmup_count > 0:
+        console.print(f"[dim]Timing protocol:[/dim] warmups={warmup_count}, measured_repeats={repeat_count}")
+
+    def _record_run(n_qubits: int, run: Dict[str, Any], *, warmup: bool, index: int) -> None:
+        raw_entry: Dict[str, Any] = {
+            "circuit_type": circuit_type,
+            "backend": backend,
+            "qubits": n_qubits,
+            "warmup": bool(warmup),
+            "index": index,
+            "wall_ms": float(run.get("wall_ms", 0.0)),
+            "cpu_s": float(run.get("cpu_s", 0.0)),
+            "delta_mb": float(run.get("delta_mb", 0.0)),
+            "gates": int(run.get("gates", 0)),
+            "sync": run.get("sync", {}),
+        }
+        if isinstance(run.get("mps"), dict):
+            raw_entry["mps"] = run["mps"]
+        raw_runs.append(raw_entry)
+
+    def _dispatch_for(n_qubits: int, label: str):
+        if use_memray:
+            try:
+                import memray  # type: ignore
+                memdir = os.path.join(out_prefix, 'memray')
+                os.makedirs(memdir, exist_ok=True)
+                out_bin = os.path.join(memdir, f"{circuit_type}_n{n_qubits}_{label}.bin")
+                with memray.Tracker(out_bin):
+                    return _simulate_dispatch(circuit_type, n_qubits)
+            except Exception:
+                return _simulate_dispatch(circuit_type, n_qubits)
+        return _simulate_dispatch(circuit_type, n_qubits)
+
     for n in qubits:
         if stop_fn is not None and stop_fn():
             warn("abort requested; stopping scaling loop")
@@ -1762,20 +2008,25 @@ def run_scaling_benchmark(circuit_type: str, qubits: List[int], simulate_cap: Op
         if simulate_cap is not None and n > simulate_cap:
             warn(f"skip {n} > cap {simulate_cap}")
             continue
-        if use_memray:
-            try:
-                import memray  # type: ignore
-                memdir = os.path.join(out_prefix, 'memray')
-                os.makedirs(memdir, exist_ok=True)
-                out_bin = os.path.join(memdir, f"{circuit_type}_n{n}.bin")
-                with memray.Tracker(out_bin):
-                    r = _simulate_dispatch(circuit_type, n)
-            except Exception:
-                r = _simulate_dispatch(circuit_type, n)
-        else:
-            r = _simulate_dispatch(circuit_type, n)
-        if r is None:
+        for warmup_idx in range(warmup_count):
+            rw = _dispatch_for(n, f"warmup{warmup_idx + 1}")
+            if rw is not None:
+                _record_run(n, rw, warmup=True, index=warmup_idx + 1)
+        measured_runs: List[Dict[str, Any]] = []
+        for repeat_idx in range(repeat_count):
+            rr = _dispatch_for(n, f"repeat{repeat_idx + 1}")
+            if rr is None:
+                continue
+            measured_runs.append(rr)
+            _record_run(n, rr, warmup=False, index=repeat_idx + 1)
+        if not measured_runs:
             continue
+        r = _aggregate_repeats(measured_runs, measured_runs[-1])
+        timing = r.setdefault("timing", {})
+        timing["warmups"] = warmup_count
+        timing["measured_repeats"] = repeat_count
+        suffix_hint = "_mpsd" if (backend == 'mps' and os.environ.get('MLXQ_MPSD', '0') == '1') else ("_mps" if backend == 'mps' else "")
+        timing["raw_runs_file"] = f"{circuit_type}{suffix_hint}_raw_runs.csv"
         # Convert to expected schema
         wall_ms = float(r.get("wall_ms", 0.0))
         cpu_s = float(r.get("cpu_s", 0.0))
@@ -1807,9 +2058,24 @@ def run_scaling_benchmark(circuit_type: str, qubits: List[int], simulate_cap: Op
             "memory_approx_mb": approx_mb,
             "memory_measured_mb": meas_mb,
         }
+        if isinstance(r.get('timing'), dict):
+            entry["timing"] = r["timing"]
         if backend == 'mps' and isinstance(r.get('mps'), dict):
             entry["mps"] = r["mps"]
         results.append(entry)
+        timing_summaries.append({
+            "qubits": n,
+            "warmups": warmup_count,
+            "repeats": repeat_count,
+            "mean_ms": timing.get("wall_ms", {}).get("mean", wall_ms),
+            "median_ms": timing.get("wall_ms", {}).get("median", wall_ms),
+            "stdev_ms": timing.get("wall_ms", {}).get("stdev", 0.0),
+            "stderr_ms": timing.get("wall_ms", {}).get("stderr", 0.0),
+            "ci95_ms": timing.get("wall_ms", {}).get("ci95", 0.0),
+            "min_ms": timing.get("wall_ms", {}).get("min", wall_ms),
+            "max_ms": timing.get("wall_ms", {}).get("max", wall_ms),
+            "summary_statistic": "mean_ms",
+        })
         # Optional per-run MPS bonds CSV
         if backend == 'mps':
             try:
@@ -1910,11 +2176,79 @@ def run_scaling_benchmark(circuit_type: str, qubits: List[int], simulate_cap: Op
         console.print(f"[purple]CSV data:[/purple] {csv_out}")
     except Exception as e:
         error(f"CSV write error: {e}")
+    raw_csv_out = f"{out_prefix}/{key_name}_raw_runs.csv"
+    raw_json_out = f"{out_prefix}/{key_name}_raw_runs.json"
+    timing_csv_out = f"{out_prefix}/{key_name}_timing_summary.csv"
     try:
-        import json
+        with open(raw_csv_out, 'w', newline='') as f:
+            fields = [
+                "circuit_type", "backend", "qubits", "warmup", "index",
+                "wall_ms", "cpu_s", "delta_mb", "gates", "sync_json", "mps_json",
+            ]
+            writer = csv.DictWriter(f, fieldnames=fields)
+            writer.writeheader()
+            for raw in raw_runs:
+                writer.writerow({
+                    "circuit_type": raw.get("circuit_type", ""),
+                    "backend": raw.get("backend", ""),
+                    "qubits": raw.get("qubits", ""),
+                    "warmup": 1 if raw.get("warmup") else 0,
+                    "index": raw.get("index", ""),
+                    "wall_ms": f"{float(raw.get('wall_ms', 0.0)):.6f}",
+                    "cpu_s": f"{float(raw.get('cpu_s', 0.0)):.6f}",
+                    "delta_mb": f"{float(raw.get('delta_mb', 0.0)):.6f}",
+                    "gates": raw.get("gates", 0),
+                    "sync_json": json.dumps(raw.get("sync", {}), sort_keys=True),
+                    "mps_json": json.dumps(raw.get("mps", {}), sort_keys=True),
+                })
+        console.print(f"[purple]Raw timing CSV:[/purple] {raw_csv_out}")
+    except Exception as e:
+        warn(f"raw timing CSV write skipped: {e}")
+    try:
+        with open(timing_csv_out, 'w', newline='') as f:
+            fields = [
+                "qubits", "warmups", "repeats", "mean_ms", "median_ms", "stdev_ms",
+                "stderr_ms", "ci95_ms", "min_ms", "max_ms", "summary_statistic",
+            ]
+            writer = csv.DictWriter(f, fieldnames=fields)
+            writer.writeheader()
+            for item in timing_summaries:
+                writer.writerow({
+                    "qubits": item["qubits"],
+                    "warmups": item["warmups"],
+                    "repeats": item["repeats"],
+                    "mean_ms": f"{float(item['mean_ms']):.6f}",
+                    "median_ms": f"{float(item['median_ms']):.6f}",
+                    "stdev_ms": f"{float(item['stdev_ms']):.6f}",
+                    "stderr_ms": f"{float(item['stderr_ms']):.6f}",
+                    "ci95_ms": f"{float(item['ci95_ms']):.6f}",
+                    "min_ms": f"{float(item['min_ms']):.6f}",
+                    "max_ms": f"{float(item['max_ms']):.6f}",
+                    "summary_statistic": item["summary_statistic"],
+                })
+        console.print(f"[purple]Timing summary CSV:[/purple] {timing_csv_out}")
+    except Exception as e:
+        warn(f"timing summary CSV write skipped: {e}")
+    try:
+        with open(raw_json_out, 'w') as f:
+            json.dump({
+                "circuit_type": circuit_type,
+                "backend": backend,
+                "manifest_file": "run_manifest.json",
+                "benchmark_protocol": manifest.get("benchmark_protocol", {}),
+                "raw_runs": raw_runs,
+                "timing_summary": timing_summaries,
+            }, f, indent=2)
+        console.print(f"[purple]Raw timing JSON:[/purple] {raw_json_out}")
+    except Exception as e:
+        warn(f"raw timing JSON write skipped: {e}")
+    try:
         with open(json_out, 'w') as f:
             json.dump({
                 "circuit_type": circuit_type,
+                "manifest_file": "run_manifest.json",
+                "benchmark_protocol": manifest.get("benchmark_protocol", {}),
+                "external_baseline_availability": manifest.get("external_baseline_availability", {}),
                 "results": results,
             }, f, indent=2)
         console.print(f"[purple]JSON:[/purple] {json_out}")
@@ -1933,7 +2267,6 @@ def run_scaling_benchmark(circuit_type: str, qubits: List[int], simulate_cap: Op
     except Exception as e:
         warn(f"hw CSV write skipped: {e}")
     try:
-        import json
         json_out_hw = f"{out_prefix}/{key_name}_{hw_prefix}_mlx_quantum.json"
         meta = {
             "framework": "mlx-quantum",
@@ -1945,6 +2278,9 @@ def run_scaling_benchmark(circuit_type: str, qubits: List[int], simulate_cap: Op
             "circuit_type": circuit_type,
             "backend": backend,
             "platform": "apple-silicon" if platform.system() == "Darwin" else platform.system().lower(),
+            "manifest_file": "run_manifest.json",
+            "benchmark_protocol": manifest.get("benchmark_protocol", {}),
+            "external_baseline_availability": manifest.get("external_baseline_availability", {}),
             "results": results,
         }
         # Enrich JSON meta with MPS configuration/diagnostics

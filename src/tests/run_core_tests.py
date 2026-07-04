@@ -25,6 +25,7 @@ def main():
         ('mlxQQCExamplesTest.py','mlxQQCExamplesTest'),
         ('mlxQMpsBackendTest.py','mlxQMpsBackendTest'),
         ('mlxQMpsParamSuiteTest.py','mlxQMpsParamSuiteTest'),
+        ('mlxQBenchmarkProtocolTest.py','mlxQBenchmarkProtocolTest'),
     ]:
         module_path = os.path.join(os.path.dirname(__file__), fname)
         if not os.path.exists(module_path):
