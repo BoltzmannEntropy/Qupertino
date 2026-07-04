@@ -1,80 +1,66 @@
-# QuantumStudio v1.0.0 Release Notes
-
-**Release Date:** February 21, 2026
+# Qupertino v1.0.2 Release Notes
 
 ## Overview
 
-QuantumStudio v1.0.0 is the initial release of the MLX Quantum Benchmarking Suite for Apple Silicon. This desktop application provides researchers with tools for running quantum computing benchmarks using the MLX framework on Apple's unified memory architecture.
+Qupertino is an MLX-native quantum circuit simulator and benchmarking studio for Apple Silicon, packaged as a self-contained macOS desktop app (Flutter UI + bundled Python/FastAPI backend, no external install required).
+
+It runs in **two measured performance tiers** on the same hardware:
+
+- **Pure-MLX tier** — every structured gate expressed as MLX array operations.
+- **Hand-tuned Metal shader tier** (opt-in) — hand-written Metal kernels for every structured layer family (phase-LUT diagonals, GF(2) affine permutation gathers, fused tensor-product single-qubit layers, radix-4 QFT and Walsh–Hadamard butterflies, basis-conjugated XX/YY Trotter layers), reached through semantics-preserving fusion detectors.
+
+## Measured performance (M1 Max, 25 qubits, gate-identical circuits)
+
+The Metal shader tier is **fastest in all 18 comparison cells** against Qiskit Aer CPU and PennyLane `lightning.qubit`:
+
+| Workload | Qupertino Metal | Aer CPU | PennyLane | Paired speedup |
+|---|---:|---:|---:|---|
+| QFT | 59 ms | 2.80 s | 5.61 s | 47× / 95× |
+| TFIM Trotter (20 steps) | 0.50 s | 17.79 s | 32.95 s | 36× / 67× |
+| Phase estimation | 0.105 s | 4.05 s | 6.06 s | 43× / 65× |
+| GHZ | 22 ms | 0.69 s | 0.42 s | 31× / 19× |
+
+Gate-stream QFT (59 ms) is faster than MLX's own `mx.fft` primitive. Across the full 29-workload suite the shader tier accelerates **26 of 29 workloads, up to 25×** over the pure tier.
 
 ## Features
 
-### Quantum Benchmarking
-- **MLX Integration**: Native Apple Silicon acceleration via MLX framework
-- **Benchmark Suite**: Comprehensive quantum algorithm benchmarks
-- **Performance Metrics**: Detailed timing and memory profiling
-- **Multi-Qubit Support**: Scalable benchmarks from 1-25 qubits
+- MLX state-vector and MPS backends; OpenQASM 2.0 import
+- Benchmark families: QFT, QAOA, VQE, QCBM, Grover, phase estimation, Hamiltonian/time-evolution, Heisenberg/TFIM Trotter, and more
+- Job queue, results viewer, CSV/JSON export, scaling plots
+- MCP server for Claude Code integration
+- Reproducible artifacts with raw timing distributions and run manifests
 
-### Supported Benchmarks
-- **Gate Operations**: X, H, T, RX, RZ, CNOT, Toffoli
-- **Quantum Fourier Transform (QFT)**: Multiple variants
-- **QCBM**: Quantum Circuit Born Machine benchmarks
-- **VQE**: Variational Quantum Eigensolver
-- **Phase Estimation**: Quantum phase estimation algorithms
+## Technical details
 
-### Analysis Tools
-- **Job Queue**: Background benchmark execution
-- **Results Viewer**: Interactive benchmark analysis
-- **Export Formats**: JSON, CSV, and yaoquantum.org compatible output
-- **Visualization**: Performance plots and scaling analysis
-
-### MCP Integration
-- **MCP Server**: Claude Code integration via MCP protocol
-- **Remote Control**: Run benchmarks via AI assistant
-- **Status Monitoring**: Real-time job status queries
-
-## Technical Details
-
-- **Version**: 1.0.0 (build 1)
-- **Platform**: macOS (Apple Silicon optimized)
-- **Framework**: Flutter 3.x with Python FastAPI backend
-- **Python**: 3.11.x bundled in DMG
-- **MLX**: Apple's Machine Learning framework
+- **Version**: 1.0.2 (build 3)
+- **Platform**: macOS (Apple Silicon optimized; Intel supported with reduced performance)
+- **Framework**: Flutter with bundled Python 3.11 FastAPI backend
 - **Minimum macOS**: 12.0 (Monterey)
 
 ## Installation
 
-1. Download `QuantumStudio-1.0.0-macos.dmg`
-2. Open the DMG and drag QuantumStudio to Applications
-3. On first launch, right-click the app and select "Open" (macOS Gatekeeper bypass)
-4. If launch is still blocked, open `System Settings -> Privacy & Security -> Open Anyway`
+1. Download `Qupertino-1.0.2-macos.dmg`
+2. Open the DMG and drag **Qupertino** to Applications
+3. On first launch, right-click the app and select "Open" (macOS Gatekeeper), or open `System Settings → Privacy & Security → Open Anyway`
 
-## System Requirements
+## System requirements
 
 | Component | Minimum | Recommended |
 |-----------|---------|-------------|
 | macOS | 12.0 | 13.0+ |
-| RAM | 8GB | 16GB+ (for larger qubit counts) |
-| Storage | 2GB | 5GB |
+| RAM | 8 GB | 16 GB+ (larger qubit counts) |
+| Storage | 2 GB | 5 GB |
 | CPU | Apple Silicon (M1+) | M1 Pro/Max or newer |
 
 ## Checksums
 
-SHA256 checksums are provided in `QuantumStudio-1.0.0-macos.dmg.sha256`
-
-## Known Issues
-
-- First launch requires Gatekeeper bypass (right-click > Open or Privacy & Security > Open Anyway)
-- Large qubit benchmarks (>20) require significant memory and time
-- Intel Macs supported but with reduced performance
+SHA256 checksums are provided alongside each asset (`*.sha256`).
 
 ## License
 
-- Source code: Business Source License 1.1 (`LICENSE`)
-- Binary distribution: Binary Distribution License (`BINARY-LICENSE.txt`)
-- License overview: `LICENSE.md`
+MIT License (`LICENSE`). Source and binaries are free and open source.
 
 ---
 
-**Website:** https://qneura.ai/apps.html
-
-For bug reports and feature requests, contact: solomon@qneura.ai
+**Repository:** https://github.com/BoltzmannEntropy/Qupertino
+**Website:** https://boltzmannentropy.github.io/QupertinoWEB/
