@@ -8,6 +8,8 @@
 
 Qupertino is a three-part project: a self-published technical report, the Qupertino simulator stack, and the dedicated QuantumStudio desktop UI studio. There is no native MLX quantum simulator available today, so Qupertino provides a local simulator layer for QFT, QAOA, VQE, Hamiltonian workflows, and OpenQASM runs.
 
+The performance story is **two tiers on the same hardware**. The pure-MLX tier expresses every structured gate as MLX array operations; on top of it, an opt-in tier of **hand-written Metal shaders** (`src/mlxq/shaders/`, one flag: `MLXQ_METAL_KERNELS=1`) covers every structured layer family through semantics-preserving fusion detectors. Measured on an M1 Max against Qiskit Aer CPU and PennyLane `lightning.qubit`, the Metal tier is **fastest in all 18 comparison cells** — 25-qubit QFT in **59 ms** (47× Aer, 95× PennyLane, and faster than MLX's own `mx.fft`), TFIM Trotter in **0.5 s** — and it accelerates **26 of 29 benchmark workloads up to 25×** over the pure tier. See the charts and tables below.
+
 - Website: https://boltzmannentropy.github.io/QupertinoWEB/
 - Repository: https://github.com/BoltzmannEntropy/Qupertino
 - Author: **Shlomo Kashani**
@@ -44,7 +46,7 @@ Qupertino is a three-part project: a self-published technical report, the Qupert
 Qupertino exists to make Apple Silicon quantum benchmarking practical, local-first, and reproducible. The project packages three layers into one workflow:
 
 1. **Research layer**: benchmark methodology and framing (see the included technical report).
-2. **Simulator layer (`mlxq`)**: state-vector and MPS backends on MLX for Apple Silicon.
+2. **Simulator layer (`mlxq`)**: state-vector and MPS backends on MLX for Apple Silicon, in two performance tiers — pure-MLX structured dispatch and an opt-in hand-written Metal shader tier (`src/mlxq/shaders/`).
 3. **Product layer (`QuantumStudio`)**: desktop run orchestration, monitoring, and export.
 
 The core motivation is straightforward: Apple Silicon uses a unified memory model, but there is no default native MLX quantum runtime shipped as a platform quantum simulator. Qupertino fills that gap with a local simulator stack and benchmark harnesses for QFT, QAOA, VQE, QCBM, Grover, Hamiltonian/time-evolution workflows, and OpenQASM runs.
