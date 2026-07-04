@@ -18,7 +18,7 @@ Qupertino is a three-part project: a self-published technical report, the Qupert
 ### Repository (Git / Software Citation)
 
 ```bibtex
-@software{kashani_osxq_2026,
+@software{kashani_qupertino_2026,
   author       = {Shlomo Kashani},
   title        = {Qupertino / QuantumStudio: Apple Silicon Quantum Benchmarking Stack},
   year         = {2026},
@@ -30,9 +30,9 @@ Qupertino is a three-part project: a self-published technical report, the Qupert
 ### Technical Report Citation
 
 ```bibtex
-@techreport{kashani_mlxq_2026,
+@techreport{kashani_qupertino_report_2026,
   author       = {Shlomo Kashani},
-  title        = {Qupertino: Structured-Gate Kernel Dispatch for Quantum Circuit Simulation on Apple Silicon with MLX},
+  title        = {Qupertino: Pure MLX Array Kernels versus Hand-Tuned Metal Shaders for Quantum Circuit Simulation on Apple Silicon},
   year         = {2026},
   institution  = {Self-published technical report (unpublished)},
   url          = {https://github.com/BoltzmannEntropy/Qupertino}
