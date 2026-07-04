@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # =============================================================================
-# QuantumStudio - DMG Installer Builder
+# Qupertino - DMG Installer Builder
 # =============================================================================
 
 set -euo pipefail
 
-APP_NAME="QuantumStudio"
+APP_NAME="Qupertino"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(dirname "$SCRIPT_DIR")"
 FLUTTER_DIR="$ROOT_DIR/flutter_app"

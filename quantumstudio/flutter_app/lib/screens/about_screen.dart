@@ -56,7 +56,7 @@ class _AboutScreenState extends State<AboutScreen> {
                 icon: Icons.warning_amber_rounded,
                 title: 'Important Notice',
                 content:
-                    'QuantumStudio is intended for research, benchmarking, and education. '
+                    'Qupertino is intended for research, benchmarking, and education. '
                     'Benchmark outputs and simulation results should be independently validated '
                     'before use in publications or production decisions.',
               ),
@@ -145,7 +145,7 @@ class _AboutScreenState extends State<AboutScreen> {
                 icon: Icons.code,
                 title: 'Model Credits & Licenses',
                 content:
-                    'QuantumStudio (MIT License)\n'
+                    'Qupertino (MIT License)\n'
                     'MLX (MIT)\n'
                     'Flutter (BSD-3)\n'
                     'FastAPI (MIT)\n\n'
@@ -252,7 +252,7 @@ class _AboutScreenState extends State<AboutScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'QuantumStudio',
+                    'Qupertino',
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
@@ -645,7 +645,7 @@ class _AboutScreenState extends State<AboutScreen> {
                 FilledButton.tonalIcon(
                   onPressed: () async {
                     final uri = Uri.parse(
-                      'mailto:solomon@qneura.ai?subject=QuantumStudio%20Issue',
+                      'mailto:solomon@qneura.ai?subject=Qupertino%20Issue',
                     );
                     if (await canLaunchUrl(uri)) {
                       await launchUrl(uri);

@@ -57,7 +57,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'QuantumStudio by QNeura.ai',
+                        'Qupertino by QNeura.ai',
                         style: theme.textTheme.bodyLarge?.copyWith(
                           color: theme.colorScheme.onSurfaceVariant,
                         ),
@@ -100,7 +100,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                'QuantumStudio processes simulations locally and does not send data externally by default.',
+                                'Qupertino processes simulations locally and does not send data externally by default.',
                                 style: theme.textTheme.bodyMedium,
                               ),
                             ],
@@ -118,7 +118,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                   'Data Collection',
                   Icons.data_usage,
                   [
-                    'QuantumStudio does not collect personal information by default.',
+                    'Qupertino does not collect personal information by default.',
                     'We do not track usage behavior or sell data to third parties.',
                     'Your quantum circuit designs and simulation results remain on your device unless you choose to share them.',
                   ],
@@ -145,7 +145,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                   'File Access Permissions',
                   Icons.folder_open,
                   [
-                    'QuantumStudio may request access to save benchmark results and simulation outputs.',
+                    'Qupertino may request access to save benchmark results and simulation outputs.',
                     'Write access is requested only to save results to your chosen output folder.',
                     'File access is limited to the specific folders and files you explicitly select.',
                     'We do not access any files outside of your explicit selections.',
@@ -159,7 +159,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                   'Network Usage',
                   Icons.wifi_off,
                   [
-                    'QuantumStudio operates entirely offline for quantum simulations.',
+                    'Qupertino operates entirely offline for quantum simulations.',
                     'The application communicates only with the local backend server running on your machine.',
                     'No user data or simulation results are transmitted externally by default.',
                   ],
@@ -172,7 +172,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                   'Third-Party Services',
                   Icons.extension,
                   [
-                    'QuantumStudio uses open-source libraries including MLX, mlx-quantum, Flutter, and FastAPI.',
+                    'Qupertino uses open-source libraries including MLX, mlx-quantum, Flutter, and FastAPI.',
                     'These components run locally and do not transmit data externally.',
                     'No third-party analytics, advertising, or tracking services are integrated.',
                   ],
@@ -198,7 +198,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                   'Research & Scientific Use',
                   Icons.science,
                   [
-                    'QuantumStudio is designed for research and educational purposes.',
+                    'Qupertino is designed for research and educational purposes.',
                     'Simulation results are yours to use, publish, or share as you see fit.',
                     'We do not claim any rights to your research outputs or simulation data.',
                   ],
@@ -225,7 +225,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                   [
                     'We may update this Privacy Policy from time to time.',
                     'Changes will be reflected in the "Last updated" date at the top of this policy.',
-                    'Continued use of QuantumStudio after changes constitutes acceptance of the updated policy.',
+                    'Continued use of Qupertino after changes constitutes acceptance of the updated policy.',
                   ],
                 ),
                 const SizedBox(height: 32),

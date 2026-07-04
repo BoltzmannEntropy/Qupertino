@@ -66,7 +66,7 @@ class LicenseScreen extends StatelessWidget {
                       const SizedBox(height: 16),
                       Text('License', style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold)),
                       const SizedBox(height: 8),
-                      Text('QuantumStudio by QNeura.ai', style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+                      Text('Qupertino by QNeura.ai', style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
                     ],
                   ),
                 ),

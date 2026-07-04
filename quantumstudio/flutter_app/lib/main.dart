@@ -82,7 +82,7 @@ class _QuantumStudioAppState extends State<QuantumStudioApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'QuantumStudio',
+      title: 'Qupertino',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
@@ -136,7 +136,7 @@ class _MainShellState extends State<MainShell>
       onExitRequested: _handleExitRequested,
     );
     unawaited(_initializeBackend());
-    logger.info('main', 'QuantumStudio started');
+    logger.info('main', 'Qupertino started');
   }
 
   @override

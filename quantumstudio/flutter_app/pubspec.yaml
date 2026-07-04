@@ -1,5 +1,5 @@
 name: quantum_studio
-description: "QuantumStudio - macOS benchmark runner for osxQuantum"
+description: "Qupertino - macOS quantum benchmark studio (MLX + Metal shaders)"
 publish_to: 'none'
 version: 1.0.2+3
 

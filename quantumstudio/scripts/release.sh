@@ -4,8 +4,8 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 WEBSITE_DIR="$PROJECT_DIR/../../../QuantumStudioWEB"
-APP_NAME="QuantumStudio"
-REPO_SLUG="${GITHUB_REPO:-BoltzmannEntropy/osxQ}"
+APP_NAME="Qupertino"
+REPO_SLUG="${GITHUB_REPO:-BoltzmannEntropy/Qupertino}"
 
 UPLOAD_TO_GITHUB=false
 SYNC_WEBSITE=false

@@ -61,7 +61,7 @@ class TermsOfServiceScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'QuantumStudio by QNeura.ai',
+                        'Qupertino by QNeura.ai',
                         style: theme.textTheme.bodyLarge?.copyWith(
                           color: theme.colorScheme.onSurfaceVariant,
                         ),
@@ -104,7 +104,7 @@ class TermsOfServiceScreen extends StatelessWidget {
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                'QuantumStudio is designed for quantum computing research, education, and experimentation on Apple Silicon.',
+                                'Qupertino is designed for quantum computing research, education, and experimentation on Apple Silicon.',
                                 style: theme.textTheme.bodyMedium,
                               ),
                             ],
@@ -122,7 +122,7 @@ class TermsOfServiceScreen extends StatelessWidget {
                   '1. Acceptance of Terms',
                   Icons.handshake,
                   [
-                    'By downloading, installing, or using QuantumStudio (the "Service"), you agree to be bound by these Terms of Service.',
+                    'By downloading, installing, or using Qupertino (the "Service"), you agree to be bound by these Terms of Service.',
                     'If you do not agree to these terms, do not use the Service.',
                     'Additional guidelines may apply to specific features and are incorporated by reference.',
                   ],
@@ -135,7 +135,7 @@ class TermsOfServiceScreen extends StatelessWidget {
                   '2. Description of Service',
                   Icons.auto_awesome,
                   [
-                    'QuantumStudio is a quantum simulation and benchmarking application for research and education.',
+                    'Qupertino is a quantum simulation and benchmarking application for research and education.',
                     'The Service allows you to build, simulate, and analyze quantum circuits locally on your device.',
                     'Some features may rely on on-device models or optional plugins.',
                   ],
@@ -245,7 +245,7 @@ class TermsOfServiceScreen extends StatelessWidget {
                   '11. Apple Standard EULA',
                   Icons.description,
                   [
-                    'If you download QuantumStudio via the Apple App Store, the Apple Standard EULA applies.',
+                    'If you download Qupertino via the Apple App Store, the Apple Standard EULA applies.',
                     'Review the standard EULA at https://www.apple.com/legal/internet-services/itunes/dev/stdeula/.',
                   ],
                 ),
@@ -257,7 +257,7 @@ class TermsOfServiceScreen extends StatelessWidget {
                   '12. Open Source & Licensing',
                   Icons.lock_open,
                   [
-                    'QuantumStudio is free and open source, released under the MIT License.',
+                    'Qupertino is free and open source, released under the MIT License.',
                     'There are no paid features, subscriptions, or license keys. You may use, modify, and redistribute the software, including for commercial purposes.',
                   ],
                 ),
