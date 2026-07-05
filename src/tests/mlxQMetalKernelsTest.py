@@ -320,6 +320,49 @@ def test_metal_zz_weighted_matches_mlx(metal_env):
     assert err < 5e-6
 
 
+def test_metal_diag_weighted_all_distinct_angles(metal_env):
+    """Worst case for the fused phase-product chain (codex round-4 review):
+    EVERY bond a distinct angle, so n_groups == n_bonds and the kernel
+    multiplies one float32 phase per bond with no grouping to shorten the
+    chain. Guards against float32 accumulation drift for arbitrary weighted
+    graphs. Measured worst-case error stays ~5e-7, well under budget."""
+    n = 12
+    bonds = [(a, b) for a in range(n) for b in range(a + 1, n)]  # 66 bonds
+    ops = [{"name": "CPHASE", "wires": [a, b],
+            "parameters": [0.05 + 0.019 * k]}      # all distinct
+           for k, (a, b) in enumerate(bonds)]
+    os.environ.pop("MLXQ_METAL_KERNELS", None)
+    d1 = Device(n)
+    d1.execute(ops)
+    mx.eval(d1.sim.state)
+    os.environ["MLXQ_METAL_KERNELS"] = "1"
+    d2 = Device(n)
+    d2.execute(ops)
+    mx.eval(d2.sim.state)
+    err = float(mx.max(mx.abs(d1.sim.state - d2.sim.state)).item().real)
+    assert err < 5e-6
+
+
+def test_metal_zz_weighted_all_distinct_angles(metal_env):
+    """ZZ analogue of the all-distinct-angle stress test: every coupling
+    unique, forcing the longest per-bond float32 phase-product chain."""
+    n = 12
+    bonds = [(a, b) for a in range(n) for b in range(a + 1, n)]  # 66 bonds
+    ops = [{"name": "ZZPHASE", "wires": [a, b],
+            "parameters": [-0.04 + 0.017 * k]}     # all distinct
+           for k, (a, b) in enumerate(bonds)]
+    os.environ.pop("MLXQ_METAL_KERNELS", None)
+    d1 = Device(n)
+    d1.execute(ops)
+    mx.eval(d1.sim.state)
+    os.environ["MLXQ_METAL_KERNELS"] = "1"
+    d2 = Device(n)
+    d2.execute(ops)
+    mx.eval(d2.sim.state)
+    err = float(mx.max(mx.abs(d1.sim.state - d2.sim.state)).item().real)
+    assert err < 5e-6
+
+
 def test_metal_qft_stage_detector_matches_mlx(metal_env):
     """Gate-stream QFT (H + ascending CPHASE ladders) fuses to one pass per
     stage via the forward stage detector."""

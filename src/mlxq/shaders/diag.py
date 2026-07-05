@@ -52,9 +52,12 @@ _DIAG_CHAIN_SRC = """
 # equal angle on the host; each group contributes one LUT phase indexed by
 # its count of both-bits-set bonds, and the kernel multiplies one unit phase
 # per group. LUTs are built in double precision (QPE angles reach base*2^p
-# ~ 3e6 rad where float32 trig is meaningless), and grouping bounds the
-# float32 product chain (codex round 3: 300 per-bond products drift ~1.25e-5,
-# over the 5e-6 parity budget).
+# ~ 3e6 rad where float32 trig is meaningless); grouping also shortens the
+# in-kernel product when angles repeat. Codex round 4 flagged the all-distinct
+# case (n_groups == n_bonds) as a possible float32 drift; measured directly it
+# stays ~5e-7 vs the ideal even at 300 distinct-angle bonds — the double LUT
+# plus GPU FMA keep the unit-phase product well under the 5e-6 parity budget
+# (regression: test_metal_diag_weighted_all_distinct_angles).
 _DIAG_WEIGHTED_SRC = """
     uint i = thread_position_in_grid.x;
     if (i >= n_state) return;

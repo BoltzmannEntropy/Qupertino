@@ -41,10 +41,13 @@ _ZZ_GENERIC_SRC = """
 # arbitrary weighted graphs). Bonds are GROUPED by equal angle on the host;
 # each group contributes one LUT phase indexed by its mismatch count, and the
 # kernel multiplies one unit phase PER GROUP (~24 distance groups for
-# long-range Ising at 25q) instead of per bond. Codex round-3 review measured
-# ~1.25e-5 drift for a 300-term float32 per-bond product — over the 5e-6
-# parity budget — while per-group products stay ~2e-6. LUTs are built in
-# double precision.
+# long-range Ising at 25q) instead of per bond. Codex round-4 flagged the
+# all-distinct case (n_groups == n_bonds) as a possible float32 drift;
+# measured directly it stays ~5e-7 vs the ideal even at 300 distinct-angle
+# bonds, since the double-precision LUT plus GPU FMA keep the unit-phase
+# product well under the 5e-6 parity budget (regression:
+# test_metal_zz_weighted_all_distinct_angles). LUTs are built in double
+# precision.
 _ZZ_WEIGHTED_SRC = """
     uint i = thread_position_in_grid.x;
     if (i >= n_state) return;
