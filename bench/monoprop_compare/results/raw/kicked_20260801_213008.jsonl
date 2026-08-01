@@ -1,0 +1,3 @@
+{"scenario": "kicked", "num_qubits": 16, "label": "mlxQ (Metal shaders)", "runtime_s": 0.5888462909788359, "expval": 0.34029778838157654, "num_terms": 65536, "memory_mb": 0.5, "metal": "1"}
+{"scenario": "kicked", "num_qubits": 20, "label": "mlxQ (Metal shaders)", "runtime_s": 0.5118600830028299, "expval": 0.46943917870521545, "num_terms": 1048576, "memory_mb": 8.0, "metal": "1"}
+{"scenario": "kicked", "num_qubits": 24, "label": "mlxQ (Metal shaders)", "runtime_s": 1.2879170840024017, "expval": 0.38196420669555664, "num_terms": 16777216, "memory_mb": 128.0, "metal": "1"}

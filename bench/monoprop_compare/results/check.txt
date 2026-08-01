@@ -1,0 +1,3 @@
+TFIM 3x3: max |mlxQ - monoprop| = 3.16e-06  [OK]
+TFIM 3x4: max |mlxQ - monoprop| = 2.45e-06  [OK]
+Kicked n=10: |mlxQ - monoprop| = 3.35e-06  [OK]

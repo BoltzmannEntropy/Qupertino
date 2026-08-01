@@ -1,0 +1,6 @@
+{"scenario": "kicked", "num_qubits": 16, "label": "mlxQ (Metal shaders)", "runtime_s": 0.02768470798037015, "expval": 0.34029778838157654, "num_terms": 65536, "memory_mb": 0.5, "metal": "1"}
+{"scenario": "kicked", "num_qubits": 16, "label": "monoprop", "runtime_s": 0.20731462497496977, "expval": 0.021272008912030564, "num_terms": 178305, "memory_mb": 7.926688194274902, "metal": "1"}
+{"scenario": "kicked", "num_qubits": 20, "label": "mlxQ (Metal shaders)", "runtime_s": 0.06837445800192654, "expval": 0.46943917870521545, "num_terms": 1048576, "memory_mb": 8.0, "metal": "1"}
+{"scenario": "kicked", "num_qubits": 20, "label": "monoprop", "runtime_s": 0.4079240410064813, "expval": 0.2815838720711442, "num_terms": 373619, "memory_mb": 16.756752967834473, "metal": "1"}
+{"scenario": "kicked", "num_qubits": 24, "label": "mlxQ (Metal shaders)", "runtime_s": 0.39026958297472447, "expval": 0.38196420669555664, "num_terms": 16777216, "memory_mb": 128.0, "metal": "1"}
+{"scenario": "kicked", "num_qubits": 24, "label": "monoprop", "runtime_s": 0.3293188330135308, "expval": 0.3566298808497836, "num_terms": 301752, "memory_mb": 15.153794288635254, "metal": "1"}
