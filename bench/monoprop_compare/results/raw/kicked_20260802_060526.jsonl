@@ -1,0 +1,1 @@
+{"scenario": "kicked", "num_qubits": 28, "label": "mlxQ (Metal shaders)", "runtime_s": 56.32416633298271, "expval": 0.29056671261787415, "num_terms": 268435456, "memory_mb": 2048.0, "metal": "1"}

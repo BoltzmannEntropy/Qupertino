@@ -1,0 +1,1 @@
+{"scenario": "kicked", "num_qubits": 16, "label": "monoprop", "runtime_s": 0.18916300000273623, "expval": 0.021272008912030564, "num_terms": 178305, "memory_mb": 7.926688194274902, "metal": "0"}

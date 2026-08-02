@@ -74,14 +74,13 @@ users. Qiskit-convention angles theta map to monoprop parameters theta/2.
 
 ## Findings
 
-1. **Complementary regimes, crossover at ~24–28 qubits.** mlxQ (Metal tier)
-   leads by up to 65x in the 16–20-qubit range and by 2.9x at the 25-qubit
-   TFIM; the 24-qubit kicked point is a near-tie (monoprop 1.4x ahead), and
-   from 28 qubits monoprop leads decisively (13.9x TFIM, 254x kicked) and
-   alone reaches the 36-qubit TFIM (3.1 s) and 127-qubit kicked Ising
-   (0.68 s, 223k terms). The 9-qubit Metal point (1.7x) absorbs one-time
-   kernel compilation — the pure-MLX tier is 10.7x ahead there. The
-   crossover is algorithmic (2^n state growth vs saturating term counts:
+1. **Complementary regimes, crossover at ~24–28 qubits.** By median over
+   dedicated-process repeats, mlxQ (Metal tier) leads by up to 66x in the
+   16–20-qubit range and by 3.4x at the 25-qubit TFIM; the 24-qubit kicked
+   point is a near-tie (monoprop 1.4x ahead), and from 28 qubits monoprop
+   leads decisively (23.5x TFIM, ~340x kicked) and alone reaches the
+   36-qubit TFIM (3.6 s) and 127-qubit kicked Ising (0.67 s, 223k terms).
+   The crossover is algorithmic (2^n state growth vs saturating term counts:
    ~3.6–5.6M for TFIM), not an implementation artifact.
 
 2. **Accuracy at production truncation.** At the upstream kicked-Ising
@@ -96,7 +95,18 @@ users. Qiskit-convention angles theta map to monoprop parameters theta/2.
 3. **Statevector memory ceiling.** At >= 26 qubits the mlxQ side needed a
    per-step MLX buffer-pool flush (`mx.clear_cache()`) to avoid unified-memory
    thrashing (262 s -> 41 s at 28 qubits); 28 qubits is the practical ceiling
-   on 32 GB. The flush is part of the committed benchmark.
+   on 32 GB. Even with the flush, 28-qubit runs vary 2–3x run to run
+   (TFIM 40.7–86.6 s; kicked 47.8–135.9 s) — the min–max bars in the figure
+   show this. The flush is part of the committed benchmark.
+
+4. **Measurement protocol matters at these timescales.** Two effects the
+   initial single-shot runs hid: (a) sub-second monoprop times vary
+   +-20–50% between runs, and (b) running monoprop after mlxQ in the same
+   process inflated monoprop's 28-qubit TFIM time by ~38% (2.93 s shared vs
+   2.02–2.23 s dedicated) through residual memory pressure. All reported
+   numbers are therefore medians over repeats in dedicated per-engine
+   processes; the contaminated and pre-fix raw runs are retained in
+   `results/raw/` and excluded by the documented rules in `make_figure.py`.
 
 ## Fairness caveats
 
@@ -113,8 +123,10 @@ users. Qiskit-convention angles theta map to monoprop parameters theta/2.
   construction), whereas the pure-MLX tier's fused ZZ-layer cache builds
   inside the first timed step. Both are one-time O(n·2^n) costs; moving the
   Z-layer build inside the first step would raise only that step.
-- Single machine, single run per point (upstream benches also use
-  rounds=1/iterations=1). Raw per-step series are committed for inspection.
+- Single machine. Unlike upstream's rounds=1/iterations=1, each point is the
+  median of >= 3 dedicated-process runs with min–max spread reported —
+  single-shot times proved too noisy (+-20–50%) to support ratio claims.
+  Raw per-step series for every run, including excluded ones, are committed.
 
 ## Reproduce
 
